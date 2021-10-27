@@ -1,7 +1,7 @@
 # Личный проект «Readme»
 
 * Студент: [Игорь Влащенко](https://up.htmlacademy.ru/php/12/user/442219).
-* Наставник: `Неизвестно`.
+* Наставник: [Антон Попов](https://htmlacademy.ru/profile/joker).
 
 ---
 
