@@ -6,40 +6,70 @@ $user_name = 'Igor';
 $posts = [
     [
         'title' => 'Цитата',
-        'type' => 'post-quote',
+        'type' => 'quote',
         'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих',
         'name' => 'Лариса',
         'avatar' => 'userpic-larisa-small.jpg',
     ],				
     [
         'title' => 'Игра престолов',
-        'type' => 'post-text',
+        'type' => 'text',
         'content' => 'Не могу дождаться начала финального сезона своего любимого сериала!',
         'name' => 'Владик',
         'avatar' => 'userpic.jpg',
     ], 				
     [
         'title' => 'Наконец, обработал фотки!',
-        'type' => 'post-photo',
+        'type' => 'photo',
         'content' => 'rock-medium.jpg',
         'name' => 'Виктор',
         'avatar' => 'userpic-mark.jpg',
     ], 				
     [
         'title' => 'Моя мечта',
-        'type' => 'post-photo',
+        'type' => 'photo',
         'content' => 'coast-medium.jpg',
         'name' => 'Лариса',
         'avatar' => 'userpic-larisa-small.jpg',
     ], 				
     [
         'title' => 'Лучшие курсы',
-        'type' => 'post-link',
+        'type' => 'link',
         'content' => 'www.htmlacademy.ru',
         'name' => 'Владик',
         'avatar' => 'userpic.jpg',
     ],
 ];
+
+/**
+ * Truncates the text to the specified number of characters
+ *
+ * @param string $text Input text
+ * @param int $length Maximum number of characters
+ *
+ * @return string Output text 
+ */
+function cut_text($text, $length = 300) {
+
+    if (mb_strlen($text, 'UTF-8') <= $length) {
+        return $text;
+    }
+
+    $words = explode(' ', $text);
+    $output_string = '';
+
+    foreach ($words as $word) {
+        $output_string .= $word;
+
+        if (mb_strlen($output_string, 'UTF-8') > $length) {
+            break;
+        } else {
+            $output_string .= ' ';
+        }
+    };
+
+    return $output_string . '...';
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -241,13 +271,13 @@ $posts = [
         </div>
         <div class="popular__posts">
             <?php foreach($posts as $post): ?>
-                <article class="popular__post post <?=$post['type']; ?>">
+                <article class="popular__post post post--<?=$post['type']; ?>">
                     <header class="post__header">
                         <h2><?=$post['title']; ?></h2>
                     </header>
                     <div class="post__main">
                         <!--здесь содержимое карточки-->
-                        <?php if($post['type'] === 'post-quote'): ?>
+                        <?php if($post['type'] === 'quote'): ?>
                             <!--содержимое для поста-цитаты-->
                             <blockquote>
                                 <p>
@@ -255,8 +285,7 @@ $posts = [
                                 </p>
                                 <cite>Неизвестный Автор</cite>
                             </blockquote>
-                        <?php endif; ?>
-                        <?php if($post['type'] === 'post-link'): ?>
+                        <?php elseif($post['type'] === 'link'): ?>
                             <!--содержимое для поста-ссылки-->
                             <div class="post-link__wrapper">
                                 <a class="post-link__external" href="http://" title="Перейти по ссылке">
@@ -271,14 +300,12 @@ $posts = [
                                     <span><?=$post['content']; ?></span>
                                 </a>
                             </div>
-                        <?php endif; ?>
-                        <?php if($post['type'] === 'post-photo'): ?>
+                        <?php elseif($post['type'] === 'photo'): ?>
                             <!--содержимое для поста-фото-->
                             <div class="post-photo__image-wrapper">
                                 <img src="img/<?=$post['content']; ?>" alt="Фото от пользователя" width="360" height="240">
                             </div>
-                        <?php endif; ?>
-                        <?php if($post['type'] === 'post-video'): ?>
+                        <?php elseif($post['type'] === 'video'): ?>
                             <!--содержимое для поста-видео-->
                             <div class="post-video__block">
                                 <div class="post-video__preview">
@@ -292,10 +319,12 @@ $posts = [
                                     <span class="visually-hidden">Запустить проигрыватель</span>
                                 </a>
                             </div>
-                        <?php endif; ?>
-                        <?php if($post['type'] === 'post-text'): ?>
+                        <?php elseif($post['type'] === 'text'): ?>
                             <!--содержимое для поста-текста-->
-                            <p><?=$post['content']; ?></p>
+                            <p><?=cut_text($post['content']); ?></p>
+                            <?php if (strlen(cut_text($post['content'])) !== strlen($post['content'])): ?>
+                                <a class="post-text__more-link" href="#">Читать далее</a>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
                     <footer class="post__footer">
