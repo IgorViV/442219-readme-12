@@ -1,4 +1,6 @@
 <?php
+require_once('helpers.php');
+
 $is_auth = rand(0, 1);
 
 $user_name = 'Igor'; 
@@ -41,34 +43,15 @@ $posts = [
     ],
 ];
 
-/**
- * Truncates the text to the specified number of characters
- *
- * @param string $text Input text
- * @param int $length Maximum number of characters
- *
- * @return string Output text 
- */
-function cut_text($text, $length = 300) {
+$page_content = include_template('main.php', [
+    'posts' => $posts,
+]);
 
-    if (mb_strlen($text, 'UTF-8') <= $length) {
-        return $text;
-    }
+$layout_content = include_template('layout.php', [
+    'content' => $page_content, 
+    'title_page' => 'readme: популярное',
+    'is_auth' => $is_auth,
+    'user_name' => $user_name,
+]);
 
-    $words = explode(' ', $text);
-    $output_string = '';
-
-    foreach ($words as $word) {
-        $output_string .= $word;
-
-        if (mb_strlen($output_string, 'UTF-8') > $length) {
-            break;
-        } else {
-            $output_string .= ' ';
-        }
-    };
-
-    return $output_string . '...';
-}
-?>
-<?php require('templates/layout.php'); ?>
+print($layout_content);
