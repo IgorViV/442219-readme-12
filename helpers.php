@@ -262,3 +262,33 @@ function generate_random_date($index)
 
     return $dt;
 }
+
+/**
+ * Truncates the text to the specified number of characters
+ *
+ * @param string $text Input text
+ * @param int $length Maximum number of characters
+ *
+ * @return string Output text 
+ */
+function cut_text($text, $length = 300) {
+
+    if (mb_strlen($text, 'UTF-8') <= $length) {
+        return $text;
+    }
+
+    $words = explode(' ', $text);
+    $output_string = '';
+
+    foreach ($words as $word) {
+        $output_string .= $word;
+
+        if (mb_strlen($output_string, 'UTF-8') > $length) {
+            break;
+        } else {
+            $output_string .= ' ';
+        }
+    };
+
+    return $output_string . '...';
+}
