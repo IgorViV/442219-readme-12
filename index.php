@@ -1,54 +1,27 @@
 <?php
+declare(strict_types=1);
+
 require_once('helpers.php');
+require_once('data.php');
 
 $is_auth = rand(0, 1);
 
-$user_name = 'Igor'; 
-				
-$posts = [
-    [
-        'title' => 'Цитата',
-        'type' => 'quote',
-        'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих',
-        'name' => 'Лариса',
-        'avatar' => 'userpic-larisa-small.jpg',
-    ],				
-    [
-        'title' => 'Игра престолов',
-        'type' => 'text',
-        'content' => 'Не могу дождаться начала финального сезона своего любимого сериала!',
-        'name' => 'Владик',
-        'avatar' => 'userpic.jpg',
-    ], 				
-    [
-        'title' => 'Наконец, обработал фотки!',
-        'type' => 'photo',
-        'content' => 'rock-medium.jpg',
-        'name' => 'Виктор',
-        'avatar' => 'userpic-mark.jpg',
-    ], 				
-    [
-        'title' => 'Моя мечта',
-        'type' => 'photo',
-        'content' => 'coast-medium.jpg',
-        'name' => 'Лариса',
-        'avatar' => 'userpic-larisa-small.jpg',
-    ], 				
-    [
-        'title' => 'Лучшие курсы',
-        'type' => 'link',
-        'content' => 'www.htmlacademy.ru',
-        'name' => 'Владик',
-        'avatar' => 'userpic.jpg',
-    ],
-];
+$user_name = 'Igor';
 
-$page_content = include_template('main.php', [
-    'posts' => $posts,
+$popular_posts = '';
+
+foreach($posts as $post) {
+    $popular_posts .= include_template('views/post-popular.php', [
+        'post' => $post,
+    ]);
+}
+
+$page_content = include_template('views/main-popular.php', [
+    'popular_posts' => $popular_posts,
 ]);
 
-$layout_content = include_template('layout.php', [
-    'content' => $page_content, 
+$layout_content = include_template('layouts/layout.php', [
+    'content' => $page_content,
     'title_page' => 'readme: популярное',
     'is_auth' => $is_auth,
     'user_name' => $user_name,

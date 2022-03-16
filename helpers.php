@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'
  *
@@ -133,19 +135,16 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
 function include_template($name, array $data = [])
 {
     $name = 'templates/' . $name;
-    $result = '';
 
     if (!is_readable($name)) {
-        return $result;
+        return '';
     }
 
     ob_start();
     extract($data);
     require $name;
 
-    $result = ob_get_clean();
-
-    return $result;
+    return ob_get_clean();
 }
 
 /**
@@ -269,26 +268,33 @@ function generate_random_date($index)
  * @param string $text Input text
  * @param int $length Maximum number of characters
  *
- * @return string Output text 
+ * @return string Output text
  */
-function cut_text($text, $length = 300) {
+function cut_text(string $text, int $length = 300): array
+{
+    $output_string = $text;
+    $is_long = false;
 
-    if (mb_strlen($text, 'UTF-8') <= $length) {
-        return $text;
+    if (mb_strlen($text, 'UTF-8') >= $length) {
+        $is_long = true;
+
+        $words = explode(' ', $text);
+
+        foreach ($words as $word) {
+            $output_string .= $word;
+
+            if (mb_strlen($output_string, 'UTF-8') > $length) {
+                break;
+            } else {
+                $output_string .= ' ';
+            }
+        };
+
+        $output_string .= '...';
     }
 
-    $words = explode(' ', $text);
-    $output_string = '';
-
-    foreach ($words as $word) {
-        $output_string .= $word;
-
-        if (mb_strlen($output_string, 'UTF-8') > $length) {
-            break;
-        } else {
-            $output_string .= ' ';
-        }
-    };
-
-    return $output_string . '...';
+    return [
+        'text' => $output_string,
+        'is_long' => $is_long,
+    ];
 }

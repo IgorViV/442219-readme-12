@@ -40,7 +40,7 @@
             </div>
         </form>
         <div class="header__nav-wrapper">
-            <?php if ($is_auth): ?> 
+            <?php if ($is_auth): ?>
             <nav class="header__nav">
                 <ul class="header__my-nav">
                     <li class="header__my-page header__my-page--popular">
