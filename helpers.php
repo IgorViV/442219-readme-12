@@ -270,7 +270,7 @@ function generate_random_date($index)
  *
  * @return string Output text
  */
-function cut_text(string $text, int $length = 300): array
+function cut_text(string $text, int $length = MAX_LENGTH_TEXT): array
 {
     $output_string = $text;
     $is_long = false;
@@ -297,4 +297,45 @@ function cut_text(string $text, int $length = 300): array
         'text' => $output_string,
         'is_long' => $is_long,
     ];
+}
+
+/**
+ * Calculates the time that has elapsed since the post was published
+ * @param string $date_public Date of publication of the post
+ *
+ * @return string Elapsed time
+ */
+function get_diff_time_public_post(string $date_public): string
+{
+    $diff_date_timestamp = time() - strtotime($date_public);
+    $diff_time_public_post = '';
+    $remaining_time = (int) ceil($diff_date_timestamp / MINUTE);
+
+    switch (true) {
+        case ($remaining_time < HOUR):
+            $diff_time_public_post = "$remaining_time " .
+            get_noun_plural_form($remaining_time, 'минута', 'минуты', 'минут') . ' назад';
+            break;
+        case ($remaining_time >= HOUR && $remaining_time < DAY):
+            $remaining_time = (int) ceil($remaining_time / HOUR);
+            $diff_time_public_post = "$remaining_time " .
+            get_noun_plural_form($remaining_time, 'час', 'часа', 'часов') . ' назад';
+            break;
+        case ($remaining_time >= DAY && $remaining_time < WEEK):
+            $remaining_time = (int) ceil($remaining_time / DAY);
+            $diff_time_public_post = "$remaining_time " .
+            get_noun_plural_form($remaining_time, 'день', 'дня', 'дней') . ' назад';
+            break;
+        case ($remaining_time >= WEEK && $remaining_time < MONTH):
+            $remaining_time = (int) ceil($remaining_time / WEEK);
+            $diff_time_public_post = "$remaining_time " .
+            get_noun_plural_form($remaining_time, 'неделя', 'недели', 'недель') . ' назад';
+            break;
+        default:
+            $remaining_time = (int) ceil($remaining_time / MONTH);
+            $diff_time_public_post = "$remaining_time " .
+            get_noun_plural_form($remaining_time, 'месяц', 'месяца', 'месяцев') . ' назад';
+    }
+
+    return $diff_time_public_post;
 }

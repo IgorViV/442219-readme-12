@@ -21,7 +21,7 @@
                 </div>
                 <div class="post__info">
                     <b class="post__author-name"><?=$post['name']; ?></b>
-                    <time class="post__time" datetime="">дата</time>
+                    <time class="post__time" datetime="<?= $post['date']; ?>"><?= $post['diff_time']; ?></time>
                 </div>
             </a>
         </div>
