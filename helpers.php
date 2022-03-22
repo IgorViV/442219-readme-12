@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'
  *
@@ -133,19 +135,16 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
 function include_template($name, array $data = [])
 {
     $name = 'templates/' . $name;
-    $result = '';
 
     if (!is_readable($name)) {
-        return $result;
+        return '';
     }
 
     ob_start();
     extract($data);
     require $name;
 
-    $result = ob_get_clean();
-
-    return $result;
+    return ob_get_clean();
 }
 
 /**
@@ -269,26 +268,74 @@ function generate_random_date($index)
  * @param string $text Input text
  * @param int $length Maximum number of characters
  *
- * @return string Output text 
+ * @return string Output text
  */
-function cut_text($text, $length = 300) {
+function cut_text(string $text, int $length = MAX_LENGTH_TEXT): array
+{
+    $output_string = $text;
+    $is_long = false;
 
-    if (mb_strlen($text, 'UTF-8') <= $length) {
-        return $text;
+    if (mb_strlen($text, 'UTF-8') >= $length) {
+        $is_long = true;
+
+        $words = explode(' ', $text);
+
+        foreach ($words as $word) {
+            $output_string .= $word;
+
+            if (mb_strlen($output_string, 'UTF-8') > $length) {
+                break;
+            } else {
+                $output_string .= ' ';
+            }
+        };
+
+        $output_string .= '...';
     }
 
-    $words = explode(' ', $text);
-    $output_string = '';
+    return [
+        'text' => $output_string,
+        'is_long' => $is_long,
+    ];
+}
 
-    foreach ($words as $word) {
-        $output_string .= $word;
+/**
+ * Calculates the time that has elapsed since the post was published
+ * @param string $date_public Date of publication of the post
+ *
+ * @return string Elapsed time
+ */
+function get_diff_time_public_post(string $date_public): string
+{
+    $diff_date_timestamp = time() - strtotime($date_public);
+    $diff_time_public_post = '';
+    $remaining_time = (int) ceil($diff_date_timestamp / MINUTE);
 
-        if (mb_strlen($output_string, 'UTF-8') > $length) {
+    switch (true) {
+        case ($remaining_time < HOUR):
+            $diff_time_public_post = "$remaining_time " .
+            get_noun_plural_form($remaining_time, 'минута', 'минуты', 'минут') . ' назад';
             break;
-        } else {
-            $output_string .= ' ';
-        }
-    };
+        case ($remaining_time >= HOUR && $remaining_time < DAY):
+            $remaining_time = (int) ceil($remaining_time / HOUR);
+            $diff_time_public_post = "$remaining_time " .
+            get_noun_plural_form($remaining_time, 'час', 'часа', 'часов') . ' назад';
+            break;
+        case ($remaining_time >= DAY && $remaining_time < WEEK):
+            $remaining_time = (int) ceil($remaining_time / DAY);
+            $diff_time_public_post = "$remaining_time " .
+            get_noun_plural_form($remaining_time, 'день', 'дня', 'дней') . ' назад';
+            break;
+        case ($remaining_time >= WEEK && $remaining_time < MONTH):
+            $remaining_time = (int) ceil($remaining_time / WEEK);
+            $diff_time_public_post = "$remaining_time " .
+            get_noun_plural_form($remaining_time, 'неделя', 'недели', 'недель') . ' назад';
+            break;
+        default:
+            $remaining_time = (int) ceil($remaining_time / MONTH);
+            $diff_time_public_post = "$remaining_time " .
+            get_noun_plural_form($remaining_time, 'месяц', 'месяца', 'месяцев') . ' назад';
+    }
 
-    return $output_string . '...';
+    return $diff_time_public_post;
 }

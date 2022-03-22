@@ -1,7 +1,7 @@
 <?php
 /**
  * View video post
- * @var 
+ * @var
  */
 ?>
 <div class="post-video__block">
