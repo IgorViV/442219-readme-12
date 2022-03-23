@@ -1,6 +1,7 @@
+DROP DATABASE IF EXIST readme;
 CREATE DATABASE IF NOT EXISTS readme
   DEFAULT CHARACTER SET utf8
-  DEFAULT COLLATE utf8_general_ci;
+  DEFAULT COLLATE utf8_unicode_ci;
 
 USE readme;
 
@@ -9,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
   registered_at DATETIME DEFAULT NOW(),
   email VARCHAR(128) NOT NULL UNIQUE,
   user_name VARCHAR(128),
-  user_password VARCHAR(128),
+  user_password CHAR(128),
   avatar_url VARCHAR(2048)
 ) ENGINE = InnoDB;
 
