@@ -6,7 +6,7 @@
 ?>
 <blockquote>
     <p>
-        <?= htmlspecialchars($content); ?>
+        <?= htmlspecialchars($post['text_content']); ?>
     </p>
-    <cite>Неизвестный Автор</cite>
+    <cite><?= htmlspecialchars($post['author_quote']); ?></cite>
 </blockquote>

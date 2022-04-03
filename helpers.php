@@ -339,3 +339,11 @@ function get_diff_time_public_post(string $date_public): string
 
     return $diff_time_public_post;
 }
+
+/**
+ * Temp function displays variables
+ */
+function debug($data)
+{
+    echo '<pre>' . print_r($data, true) . '</pre>';
+}

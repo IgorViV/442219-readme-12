@@ -11,9 +11,9 @@
                 <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
             </div>
             <div class="post-link__info">
-                <h3><?= htmlspecialchars($content); ?></h3>
+                <h3><?= htmlspecialchars($post['site_url']); ?></h3>
             </div>
         </div>
-        <span><?= htmlspecialchars($content); ?></span>
+        <span><?= htmlspecialchars($post['site_url']); ?></span>
     </a>
 </div>
