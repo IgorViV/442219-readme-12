@@ -50,11 +50,18 @@ abstract class Model
      *
      * @param string $id Id of record
      */
-    public function findOne(string $id) // TODO prepare
+    public function findOne(string $id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = {$id}";
+        $sql = "SELECT * FROM {$this->table} WHERE id = ?";
+        $stmt = $this->getPrepareStmt($sql, [$id]);
 
-        return $this->db_resource->query($sql)->fetch_assoc();
+        if (!$stmt->execute()) {
+            throw new ExceptionDbConnect('Ошибка чтения из БД: ');
+        }
+
+        $result = $stmt->get_result();
+
+        return $result->fetch_assoc();
     }
 
     /**
@@ -86,12 +93,20 @@ abstract class Model
      * @param array $fields Fields of table
      * @param string @id Id of record
      */
-    public function findFieldsOne(array $fields, string $id) //TODO prepare
+    public function findFieldsOne(array $fields, string $id)
     {
         $name_fields = implode(', ', $fields);
-        $sql = "SELECT {$name_fields} FROM {$this->table} WHERE id = {$id}";
+        $sql = "SELECT {$name_fields} FROM {$this->table} WHERE id = ?";
 
-        return $this->db_resource->query($sql)->fetch_assoc();
+        $stmt = $this->getPrepareStmt($sql, [$id]);
+
+        if (!$stmt->execute()) {
+            throw new ExceptionDbConnect('Ошибка чтения из БД: ');
+        }
+
+        $result = $stmt->get_result();
+
+        return $result->fetch_assoc();
     }
 
     /**
