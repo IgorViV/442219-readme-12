@@ -1,19 +1,29 @@
 <?php
 declare(strict_types=1);
 
-require_once('config.php');
-require_once('helpers.php');
-require_once('data.php');
+use app\Db;
+use app\models\Model;
+use app\models\Post;
+use app\models\Type;
 
-$is_auth = rand(0, 1);
+require_once 'helpers.php';
+require_once 'data.php';
+require_once 'app/init.php';
+require_once 'app/models/Post.php';
+require_once 'app/models/Type.php';
 
-$user_name = 'Igor';
+/**
+ *
+ */
+$type = new Type($connect);
+$post = new Post($connect);
 
-$popular_posts = '';
+$types = $type->findFields(['title', 'alias']);
+
+$posts = $post->getPopularPosts();
 
 foreach($posts as $post) {
-    $post['date'] = generate_random_date(key($post));
-    $post['diff_time'] = get_diff_time_public_post($post['date']);
+    $post['diff_time'] = get_diff_time_public_post($post['created_at']);
     $popular_posts .= include_template('views/post-popular.php', [
         'post' => $post,
     ]);
@@ -21,6 +31,7 @@ foreach($posts as $post) {
 
 $page_content = include_template('views/main-popular.php', [
     'popular_posts' => $popular_posts,
+    'types' => $types,
 ]);
 
 $layout_content = include_template('layouts/layout.php', [

@@ -4,24 +4,24 @@
  * @var array Post content
  */
 ?>
-<article class="popular__post post post--<?=$post['type']; ?>">
+<article class="popular__post post post--<?= $post['type_alias']; ?>">
     <header class="post__header">
-        <h2><?=$post['title']; ?></h2>
+        <h2><?= $post['title']; ?></h2>
     </header>
     <div class="post__main">
-        <?= include_template('views/block-' . $post['type'] . '.php', [
-            'content' => $post['content'],
+        <?= include_template('views/block-' . $post['type_alias'] . '.php', [
+            'post' => $post,
         ]);?>
     </div>
     <footer class="post__footer">
         <div class="post__author">
             <a class="post__author-link" href="#" title="Автор">
                 <div class="post__avatar-wrapper">
-                    <img class="post__author-avatar" src="img/<?=$post['avatar']; ?>" alt="Аватар пользователя">
+                    <img class="post__author-avatar" src="img/<?= $post['avatar_url']; ?>" alt="Аватар пользователя">
                 </div>
                 <div class="post__info">
-                    <b class="post__author-name"><?=$post['name']; ?></b>
-                    <time class="post__time" datetime="<?= $post['date']; ?>"><?= $post['diff_time']; ?></time>
+                    <b class="post__author-name"><?= $post['author']; ?></b>
+                    <time class="post__time" datetime="<?= $post['created_at']; ?>"><?= $post['diff_time']; ?></time>
                 </div>
             </a>
         </div>
@@ -34,7 +34,7 @@
                     <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                         <use xlink:href="#icon-heart-active"></use>
                     </svg>
-                    <span>0</span>
+                    <span><?= $post['like_count']; ?></span>
                     <span class="visually-hidden">количество лайков</span>
                 </a>
                 <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
