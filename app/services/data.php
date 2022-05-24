@@ -11,3 +11,5 @@ const MONTH = 5 * WEEK;
 const DATE_TITLE = 'd.m.Y H:i';
 const MAX_LENGTH_TEXT = 300;
 const MAX_POSTS = 10;
+const TYPE_ALL = 0;
+const CURRENT_SORT = 'popular';

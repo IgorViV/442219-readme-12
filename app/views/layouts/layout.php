@@ -1,6 +1,11 @@
 <?php
 /**
  * Main layout
+ *
+ * @var string $page_content Content page
+ * @var string $title_page Title page
+ * @var bool $is_auth The user is logged in
+ * @var string $user_name Name of the authorized user
  */
 ?>
 <!DOCTYPE html>
@@ -80,25 +85,25 @@
                                 <ul class="header__profile-nav">
                                     <li class="header__profile-nav-item">
                                         <a class="header__profile-nav-link" href="#">
-                          <span class="header__profile-nav-text">
-                            Мой профиль
-                          </span>
+                                            <span class="header__profile-nav-text">
+                                                Мой профиль
+                                            </span>
                                         </a>
                                     </li>
                                     <li class="header__profile-nav-item">
                                         <a class="header__profile-nav-link" href="#">
-                          <span class="header__profile-nav-text">
-                            Сообщения
-                            <i class="header__profile-indicator">2</i>
-                          </span>
+                                            <span class="header__profile-nav-text">
+                                                Сообщения
+                                                <i class="header__profile-indicator">2</i>
+                                            </span>
                                         </a>
                                     </li>
 
                                     <li class="header__profile-nav-item">
                                         <a class="header__profile-nav-link" href="#">
-                          <span class="header__profile-nav-text">
-                            Выход
-                          </span>
+                                            <span class="header__profile-nav-text">
+                                                Выход
+                                            </span>
                                         </a>
                                     </li>
                                 </ul>

@@ -1,17 +1,16 @@
 <?php
 /**
  * View Post for populal posts page
+ *
  * @var array Post content
  */
 ?>
 <article class="popular__post post post--<?= $post['type_alias']; ?>">
     <header class="post__header">
-        <h2><?= $post['title']; ?></h2>
+        <h2><a href="./post.php?id=<?= $post['posts_id'] ?>"><?= $post['title']; ?></a></h2>
     </header>
     <div class="post__main">
-        <?= include_template('views/block-' . $post['type_alias'] . '.php', [
-            'post' => $post,
-        ]);?>
+        <?= $post_content; ?>
     </div>
     <footer class="post__footer">
         <div class="post__author">

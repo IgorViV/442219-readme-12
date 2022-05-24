@@ -8,6 +8,6 @@
 .vscode
 Thumbs.db
 vendor
-uploads/*
-!uploads/.gitkeep
+web/uploads/*
+!web/uploads/.gitkeep
 config/config.php

@@ -1,8 +1,9 @@
 <?php
-namespace app\models;
+namespace Readme\app\models;
 
-use app\exceptions\ExceptionDbConnect;
-use app\exceptions\ExceptionPrepareData;
+use Readme\app\services\Db;
+use Readme\app\exceptions\ExceptionDbConnect;
+use Readme\app\exceptions\ExceptionPrepareData;
 
 /**
  * Model is the abstract class for data models.
@@ -10,13 +11,12 @@ use app\exceptions\ExceptionPrepareData;
  */
 abstract class Model
 {
-    protected $db_resource;
+    protected $db_connect;
     protected $table;
-    // protected $fields;
 
-    public function __construct($connect)
+    public function __construct()
     {
-        return $this->db_resource = $connect;
+        $this->db_connect = Db::instance();
     }
 
     /**
@@ -52,16 +52,9 @@ abstract class Model
      */
     public function findOne(string $id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = ?";
-        $stmt = $this->getPrepareStmt($sql, [$id]);
+        $sql = "SELECT * FROM {$this->table} WHERE id = ? LIMIT 1";
 
-        if (!$stmt->execute()) {
-            throw new ExceptionDbConnect('Ошибка чтения из БД: ');
-        }
-
-        $result = $stmt->get_result();
-
-        return $result->fetch_assoc();
+        return $this->fetchAssoc($sql, [$id]);
     }
 
     /**
@@ -71,7 +64,7 @@ abstract class Model
     {
         $sql = "SELECT * FROM {$this->table}";
 
-        return $this->db_resource->query($sql)->fetch_all(MYSQLI_ASSOC);
+        return $this->db_connect->query($sql);
     }
 
     /**
@@ -84,7 +77,7 @@ abstract class Model
         $name_fields = implode(', ', $fields);
         $sql = "SELECT {$name_fields} FROM {$this->table}";
 
-        return $this->db_resource->query($sql)->fetch_all(MYSQLI_ASSOC);
+        return $this->db_connect->query($sql);
     }
 
     /**
@@ -98,15 +91,7 @@ abstract class Model
         $name_fields = implode(', ', $fields);
         $sql = "SELECT {$name_fields} FROM {$this->table} WHERE id = ?";
 
-        $stmt = $this->getPrepareStmt($sql, [$id]);
-
-        if (!$stmt->execute()) {
-            throw new ExceptionDbConnect('Ошибка чтения из БД: ');
-        }
-
-        $result = $stmt->get_result();
-
-        return $result->fetch_assoc();
+        return $this->fetchAssoc($sql, [$id]);
     }
 
     /**
@@ -114,15 +99,16 @@ abstract class Model
      */
     public function getLastId()
     {
-        return $this->db_resource->insert_id;
+        return $this->db_connect->insert_id;
     }
 
     /**
      * Prepares the data display for the prepared expression
      *
      * @param array $data Data
+     * @return array
      */
-    protected function getPrepareData(array $data)
+    protected function getPrepareData(array $data): array
     {
         $alias_values = '?';
         $types = '';
@@ -167,7 +153,7 @@ abstract class Model
      */
     protected function getPrepareStmt(string $sql, array $data)
     {
-        $stmt = $this->db_resource->prepare($sql);
+        $stmt = $this->db_connect->prepare($sql);
 
         if (!$stmt) {
             throw new ExceptionPrepareData('Ошибка инициализации подготовленного выражения: ');
@@ -182,39 +168,36 @@ abstract class Model
 
         return $stmt;
     }
+
+    /**
+     * Description of fetchAssoc()
+     */
+    protected function fetchAssoc(string $sql, array $data)
+    {
+        $stmt = $this->getPrepareStmt($sql, $data);
+
+        if (!$stmt->execute()) {
+            throw new ExceptionDbConnect('Ошибка чтения из БД: ');
+        }
+
+        $result = $stmt->get_result();
+
+        return $result->fetch_assoc();
+    }
+
+    /**
+     * Description of fetchAll
+     */
+    protected function fetchAll(string $sql, array $data)
+    {
+        $stmt = $this->getPrepareStmt($sql, $data);
+
+        if (!$stmt->execute()) {
+            throw new ExceptionDbConnect('Ошибка чтения из БД: ');
+        }
+
+        $result = $stmt->get_result();
+
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
 }
-
-// ---------------- SQL --------------------
-// -- INSERT INTO users (email, password)
-// -- VALUES ('vasya@mail.ru','secret');
-
-// -- SELECT id, email, password FROM users;
-
-// -- SELECT столбцы
-// -- FROM таблица
-// -- [WHERE условие_фильтрации_строк]
-// -- [GROUP BY столбцы_для_группировки]
-// -- [HAVING условие_фильтрации_групп]
-// -- [ORDER BY столбцы_для_сортировки]
-
-// -- сортировка записей
-// -- SELECT * FROM posts ORDER BY view_counter ASC;
-
-// -- чтение по условию
-// -- SELECT * FROM users WHERE email = 'anna@mail.ru';
-// -- SELECT * FROM users WHERE id IN (2, 4);
-// -- SELECT * FROM users WHERE avatar_url LIKE 'user%';
-
-// -- обновление записей
-// -- UPDATE users SET user_name = 'Анна В.' WHERE email = 'anna@mail.ru';
-
-// -- объединение записей
-// -- SELECT users.user_name, posts.title, posts.view_counter FROM users
-// -- JOIN posts ON posts.user_id = users.id
-// -- ORDER BY view_counter DESC;
-
-// -- группировка и агрегация
-// -- SELECT count(view_counter) FROM posts;
-// -- SELECT title, count(*) FROM posts GROUP BY title;
-
-// -- CREATE INDEX c_text ON comments(content);

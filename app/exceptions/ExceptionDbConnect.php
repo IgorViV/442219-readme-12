@@ -1,8 +1,8 @@
 <?php
-namespace app\exceptions;
+namespace Readme\app\exceptions;
 
 /**
- *
+ * Description of ExceptionDbConnect
  */
 class ExceptionDbConnect extends \Exception
 {
