@@ -8,6 +8,7 @@ use Readme\app\services\View;
  */
 abstract class BaseController
 {
+    protected $title_page = 'Readme';
     protected $route = [];
     protected $layout;
     protected $view;

@@ -11,6 +11,7 @@ use Readme\app\models\Type;
 class PostController extends BaseController
 {
     protected $layout = 'layout';
+    protected $title_page = 'Популярные посты';
 
     public function actionIndex()
     {
@@ -55,6 +56,7 @@ class PostController extends BaseController
             'posts_sort' => $posts_sort,
             'is_auth' => $is_auth,
             'user_name' => $user_name,
+            'title_page' =>$this->title_page,
         ]);
 
         $this->getView();
