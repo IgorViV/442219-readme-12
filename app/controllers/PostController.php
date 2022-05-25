@@ -4,6 +4,7 @@ namespace Readme\app\controllers;
 use Readme\app\controllers\BaseController;
 use Readme\app\models\Post;
 use Readme\app\models\Type;
+use Readme\app\models\Comment;
 
 /**
  * Description of PostController
@@ -29,9 +30,9 @@ class PostController extends BaseController
         $posts_sort = filter_input(INPUT_GET, 'sort') ?? CURRENT_SORT;
 
         if ($type_id) {
-            $posts = $post->getPopularPostsFromType($type_id);
+            $posts = $post->findPopularPostsFromType($type_id);
         } else {
-            $posts = $post->getPopularPosts();
+            $posts = $post->findPopularPosts();
         }
 
         if ($posts_sort) {
@@ -64,6 +65,48 @@ class PostController extends BaseController
 
     public function actionView()
     {
-        echo 'PostController::actionView';
+        // TODO Delete after authorization is implemented
+        $is_auth = true;
+        $user_name = 'Igor';
+
+        $post_id = filter_input(INPUT_GET, 'id');
+        $post = new Post();
+        $cur_post = $post->findPostById($post_id);
+
+        $post_content = $this->getTemplate("blocks/block-{$cur_post['type_alias']}.php", [
+            'post' => $cur_post,
+        ]);
+
+        $comment = new Comment();
+        $all_comments = $comment->findAllbyPost($post_id);
+
+        $this->setData([
+            'is_auth' => $is_auth,
+            'user_name' => $user_name,
+            'title_page' =>$this->title_page,
+            'post' => $cur_post,
+            'post_content' => $post_content,
+            'comments' => $all_comments,
+        ]);
+        $this->getView();
+
+        // === REQUIRED DATA ===
+        // +* @var array $post
+        // +* @var string Typed site content (block template)
+        // +* @var string Title post
+        // * @var int Number of likes
+        // * @var int Number of comments
+        // * @var int Number of repost
+        // * @var array Hashtags
+        // * @var string URL avatar current user for form new comments
+        // * @var string URL avatar of the author of the comment
+        // * @var string Name of the comment author
+        // * @var string Datatime of writing the comment
+        // * @var string Comment text
+        // * @var string URL avatar of the author current post
+        // * @var string Name of the current post author
+        // * @var string Datetime registration author of the current post
+        // * @var string Number of subscribers of the author current post
+        // * @var string Number of publications of the author current post
     }
 }

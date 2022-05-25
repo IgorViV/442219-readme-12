@@ -2,7 +2,23 @@
 /**
  * View page details of post by id
  *
- * @var array The content of the post
+ * @var array $post
+ * @var string Typed site content (block template)
+ * @var string Title post
+ * @var int Number of likes
+ * @var int Number of comments
+ * @var int Number of repost
+ * @var array Hashtags
+ * @var string URL avatar current user for form new comments
+ * @var string URL avatar of the author of the comment
+ * @var string Name of the comment author
+ * @var string Datatime of writing the comment
+ * @var string Comment text
+ * @var string URL avatar of the author current post
+ * @var string Name of the current post author
+ * @var string Datetime registration author of the current post
+ * @var string Number of subscribers of the author current post
+ * @var string Number of publications of the author current post
  */
 ?>
 
@@ -13,9 +29,10 @@
             <h2 class="visually-hidden">Публикация</h2>
             <div class="post-details__wrapper post-photo">
                 <div class="post-details__main-block post post--details">
-                    <div class="post-details__image-wrapper post-photo__image-wrapper">
-                        <img src="img/rock-default.jpg" alt="Фото от пользователя" width="760" height="507">
-                    </div>
+                    <!-- Post type content -->
+                    <?= $post_content; ?>
+                    <!-- end type content -->
+                    <!-- TODO width="760" height="507" for image -->
                     <div class="post__indicators">
                         <div class="post__buttons">
                             <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
@@ -25,6 +42,7 @@
                                 <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                                 <use xlink:href="#icon-heart-active"></use>
                                 </svg>
+                                <!-- TODO Number of likes -->
                                 <span>250</span>
                                 <span class="visually-hidden">количество лайков</span>
                             </a>
@@ -32,6 +50,7 @@
                                 <svg class="post__indicator-icon" width="19" height="17">
                                 <use xlink:href="#icon-comment"></use>
                                 </svg>
+                                <!-- TODO Number of comments -->
                                 <span>25</span>
                                 <span class="visually-hidden">количество комментариев</span>
                             </a>
@@ -39,6 +58,7 @@
                                 <svg class="post__indicator-icon" width="19" height="17">
                                 <use xlink:href="#icon-repost"></use>
                                 </svg>
+                                <!-- TODO Number of repost -->
                                 <span>5</span>
                                 <span class="visually-hidden">количество репостов</span>
                             </a>
@@ -46,6 +66,7 @@
                         <span class="post__view">500 просмотров</span>
                     </div>
                     <ul class="post__tags">
+                        <!-- TODO Hashtags -->
                         <li><a href="#">#nature</a></li>
                         <li><a href="#">#globe</a></li>
                         <li><a href="#">#photooftheday</a></li>
@@ -56,7 +77,8 @@
                     <div class="comments">
                         <form class="comments__form form" action="#" method="post">
                             <div class="comments__my-avatar">
-                                <img class="comments__picture" src="img/userpic-medium.jpg" alt="Аватар пользователя">
+                                <!-- TODO URL avatar current user for form new comments -->
+                                <img class="comments__picture" src="../img/userpic-medium.jpg" alt="Аватар пользователя">
                             </div>
                             <div class="form__input-section form__input-section--error">
                                 <textarea class="comments__textarea form__textarea form__input" placeholder="Ваш комментарий"></textarea>
@@ -71,45 +93,36 @@
                         </form>
                         <div class="comments__list-wrapper">
                             <ul class="comments__list">
+                                <?php if($comments): ?>
+                                <?php foreach($comments as $comment): ?>
                                 <li class="comments__item user">
-                                <div class="comments__avatar">
-                                    <a class="user__avatar-link" href="#">
-                                    <img class="comments__picture" src="img/userpic-larisa.jpg" alt="Аватар пользователя">
-                                    </a>
-                                </div>
-                                <div class="comments__info">
-                                    <div class="comments__name-wrapper">
-                                    <a class="comments__user-name" href="#">
-                                        <span>Лариса Роговая</span>
-                                    </a>
-                                    <time class="comments__time" datetime="2019-03-20">1 ч назад</time>
+                                    <div class="comments__avatar">
+                                        <a class="user__avatar-link" href="#">
+                                            <!-- TODO URL avatar of the author of the comment -->
+                                            <img class="comments__picture" src="../img/userpic-larisa.jpg" alt="Аватар пользователя">
+                                        </a>
                                     </div>
-                                    <p class="comments__text">
-                                    Красота!!!1!
-                                    </p>
-                                </div>
-                                </li>
-                                <li class="comments__item user">
-                                <div class="comments__avatar">
-                                    <a class="user__avatar-link" href="#">
-                                    <img class="comments__picture" src="img/userpic-larisa.jpg" alt="Аватар пользователя">
-                                    </a>
-                                </div>
-                                <div class="comments__info">
-                                    <div class="comments__name-wrapper">
-                                    <a class="comments__user-name" href="#">
-                                        <span>Лариса Роговая</span>
-                                    </a>
-                                    <time class="comments__time" datetime="2019-03-18">2 дня назад</time>
+                                    <div class="comments__info">
+                                        <div class="comments__name-wrapper">
+                                            <a class="comments__user-name" href="#">
+                                                <!-- TODO Name of the comment author -->
+                                                <span>Лариса Роговая</span>
+                                            </a>
+                                            <!-- TODO Datatime of writing the comment -->
+                                            <time class="comments__time" datetime="2019-03-20">1 ч назад</time>
+                                        </div>
+                                        <!-- TODO Comment text -->
+                                        <p class="comments__text">
+                                            Красота!
+                                        </p>
                                     </div>
-                                    <p class="comments__text">
-                                    Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-                                    </p>
-                                </div>
                                 </li>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
                             </ul>
                             <a class="comments__more-link" href="#">
                                 <span>Показать все комментарии</span>
+                                <!-- TODO Number of comments -->
                                 <sup class="comments__amount">45</sup>
                             </a>
                         </div>
@@ -118,29 +131,35 @@
                 <div class="post-details__user user">
                     <div class="post-details__user-info user__info">
                         <div class="post-details__avatar user__avatar">
-                        <a class="post-details__avatar-link user__avatar-link" href="#">
-                            <img class="post-details__picture user__picture" src="img/userpic-elvira.jpg" alt="Аватар пользователя">
-                        </a>
+                            <a class="post-details__avatar-link user__avatar-link" href="#">
+                                <!-- TODO URL avatar of the author current post -->
+                                <img class="post-details__picture user__picture" src="../img/userpic-elvira.jpg" alt="Аватар пользователя">
+                            </a>
                         </div>
                         <div class="post-details__name-wrapper user__name-wrapper">
-                        <a class="post-details__name user__name" href="#">
-                            <span>Эльвира Хайпулинова</span>
-                        </a>
-                        <time class="post-details__time user__time" datetime="2014-03-20">5 лет на сайте</time>
+                            <a class="post-details__name user__name" href="#">
+                                <!-- TODO Name of the current post author -->
+                                <span>Эльвира Хайпулинова</span>
+                            </a>
+                                <!-- TODO Datetime registration author of the current post -->
+                            <time class="post-details__time user__time" datetime="2014-03-20">5 лет на сайте</time>
                         </div>
                     </div>
                     <div class="post-details__rating user__rating">
                         <p class="post-details__rating-item user__rating-item user__rating-item--subscribers">
-                        <span class="post-details__rating-amount user__rating-amount">1856</span>
-                        <span class="post-details__rating-text user__rating-text">подписчиков</span>
+                            <!-- TODO Number of subscribers of the author current post -->
+                            <span class="post-details__rating-amount user__rating-amount">1856</span>
+                            <span class="post-details__rating-text user__rating-text">подписчиков</span>
                         </p>
                         <p class="post-details__rating-item user__rating-item user__rating-item--publications">
-                        <span class="post-details__rating-amount user__rating-amount">556</span>
-                        <span class="post-details__rating-text user__rating-text">публикаций</span>
+                            <!-- TODO Number of publications of the author current post -->
+                            <span class="post-details__rating-amount user__rating-amount">556</span>
+                            <span class="post-details__rating-text user__rating-text">публикаций</span>
                         </p>
                     </div>
                     <div class="post-details__user-buttons user__buttons">
                         <button class="user__button user__button--subscription button button--main" type="button">Подписаться</button>
+                        <!-- TODO URL to write a email message of the author current post -->
                         <a class="user__button user__button--writing button button--green" href="#">Сообщение</a>
                     </div>
                 </div>

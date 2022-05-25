@@ -15,7 +15,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title_page; ?></title>
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 <body class="page">
 <div style="display: none">
@@ -25,8 +25,8 @@
 <header class="header">
     <div class="header__wrapper container">
         <div class="header__logo-wrapper">
-            <a class="header__logo-link" href="main.html">
-                <img class="header__logo" src="img/logo.svg" alt="Логотип readme" width="128" height="24">
+            <a class="header__logo-link" href="../main">
+                <img class="header__logo" src="../img/logo.svg" alt="Логотип readme" width="128" height="24">
             </a>
             <p class="header__topic">
                 micro blogging
@@ -69,7 +69,7 @@
                     <li class="header__profile">
                         <a class="header__profile-link" href="#">
                             <div class="header__avatar-wrapper">
-                                <img class="header__profile-avatar" src="img/userpic-medium.jpg" alt="Аватар профиля">
+                                <img class="header__profile-avatar" src="../img/userpic-medium.jpg" alt="Аватар профиля">
                             </div>
                             <div class="header__profile-name">
                                 <span>

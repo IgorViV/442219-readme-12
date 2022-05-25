@@ -7,7 +7,7 @@
 ?>
 <article class="popular__post post post--<?= $post['type_alias']; ?>">
     <header class="post__header">
-        <h2><a href="./post.php?id=<?= $post['posts_id'] ?>"><?= $post['title']; ?></a></h2>
+        <h2><a href="./post/view?id=<?= $post['posts_id'] ?>"><?= $post['title']; ?></a></h2>
     </header>
     <div class="post__main">
         <?= $post_content; ?>
