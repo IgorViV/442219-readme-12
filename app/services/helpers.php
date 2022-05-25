@@ -1,4 +1,7 @@
 <?php
+/**
+ * This file
+ */
 declare(strict_types=1);
 
 /**
@@ -338,20 +341,6 @@ function get_diff_time_public_post(string $date_public): string
     }
 
     return $diff_time_public_post;
-}
-
-/**
- * Avtoloader
- * @param class Class
- */
-function autoloader($class)
-{
-    $class = str_replace("\\", '/', $class);
-    $file = __DIR__ . "/{$class}.php";
-
-    if (file_exists($file)) {
-        require_once $file;
-    }
 }
 
 /**
