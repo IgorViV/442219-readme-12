@@ -92,8 +92,8 @@
                             <button class="comments__submit button button--green" type="submit">Отправить</button>
                         </form>
                         <div class="comments__list-wrapper">
+                        <?php if(count($comments)): ?>
                             <ul class="comments__list">
-                                <?php if($comments): ?>
                                 <?php foreach($comments as $comment): ?>
                                 <li class="comments__item user">
                                     <div class="comments__avatar">
@@ -118,13 +118,15 @@
                                     </div>
                                 </li>
                                 <?php endforeach; ?>
-                                <?php endif; ?>
                             </ul>
-                            <a class="comments__more-link" href="#">
-                                <span>Показать все комментарии</span>
-                                <!-- TODO Number of comments -->
-                                <sup class="comments__amount">45</sup>
-                            </a>
+                                <?php if (count($comments) > MAX_COMM): ?>
+                                <!-- TODO Link to all comments -->
+                                <a class="comments__more-link" href="#">
+                                    <span>Показать все комментарии</span>
+                                    <sup class="comments__amount"><?= count($comments); ?></sup>
+                                </a>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
