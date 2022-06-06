@@ -172,7 +172,7 @@ abstract class Model
     /**
      * Description of fetchAssoc()
      */
-    protected function fetchAssoc(string $sql, array $data)
+    protected function fetchAssoc(string $sql, array $data) // TODO What is it?
     {
         $stmt = $this->getPrepareStmt($sql, $data);
 

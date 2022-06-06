@@ -111,7 +111,8 @@
                         </div>
                     </li>
                     <li>
-                        <a class="header__post-button button button--transparent" href="adding-post.html">Пост</a>
+                        <!-- TODO Disabled in add mode -->
+                        <a class="header__post-button button button--transparent" href="/post/add">Пост</a>
                     </li>
                 </ul>
             </nav>

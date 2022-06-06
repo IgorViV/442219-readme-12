@@ -1,6 +1,7 @@
 <?php
 /**
  * View Quote post
+ *
  * @var string Text content
  */
 ?>

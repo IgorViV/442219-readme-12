@@ -1,6 +1,7 @@
 <?php
 /**
  * View Text post
+ *
  * @var string Text content
  */
 ?>
@@ -9,6 +10,6 @@
 </p>
 <?php if (cut_text($post['text_content'])['is_long']): ?>
     <div class="post-text__more-link-wrapper">
-        <a class="post-text__more-link" href="#">Читать далее</a>
+        <a class="post-text__more-link" href="?id=<?= $post['posts_id'] ?>">Читать далее</a>
     </div>
 <?php endif; ?>

@@ -13,7 +13,7 @@ class Comment extends Model
     /**
      *
      */
-    public function findAllbyPost($post_id)
+    public function findAllByPost($post_id)
     {
         $sql = "SELECT comments.created_at, content, users.user_name "
         . "FROM comments "

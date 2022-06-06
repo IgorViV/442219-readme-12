@@ -50,8 +50,7 @@
                                 <svg class="post__indicator-icon" width="19" height="17">
                                 <use xlink:href="#icon-comment"></use>
                                 </svg>
-                                <!-- TODO Number of comments -->
-                                <span>25</span>
+                                <span><?= count($comments); ?></span>
                                 <span class="visually-hidden">количество комментариев</span>
                             </a>
                             <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
@@ -113,7 +112,7 @@
                                         </div>
                                         <!-- TODO Comment text -->
                                         <p class="comments__text">
-                                            Красота!
+                                            <?= $comment['content']; ?>
                                         </p>
                                     </div>
                                 </li>
