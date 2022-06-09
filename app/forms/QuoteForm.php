@@ -8,6 +8,13 @@ use Readme\app\forms\Form;
  */
 class QuoteForm extends Form
 {
+    protected $fields = [
+        'heading',
+        'quote',
+        'quote-author',
+        'tags',
+    ];
+
     protected $rules = [
         'heading' => ['required'],
         'quote' => ['required'],

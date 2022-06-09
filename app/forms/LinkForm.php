@@ -8,6 +8,12 @@ use Readme\app\forms\Form;
  */
 class LinkForm extends Form
 {
+    protected $fields = [
+        'heading',
+        'link',
+        'tags',
+    ];
+
     protected $rules = [
         'heading' => ['required'],
         'link' => ['required', 'url'],

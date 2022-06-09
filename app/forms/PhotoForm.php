@@ -8,6 +8,13 @@ use Readme\app\forms\Form;
  */
 class PhotoForm extends Form
 {
+    protected $fields = [
+        'heading',
+        'photo-url',
+        'tags',
+        'file',
+    ];
+
     protected $rules = [
         'heading' => ['required'],
         'photo-url' => ['url'],

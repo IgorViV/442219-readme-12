@@ -15,12 +15,11 @@
             <div class="form__text-inputs">
                 <div class="adding-post__input-wrapper form__input-wrapper">
                     <label class="adding-post__label form__label" for="photo-heading">Заголовок <span class="form__input-required">*</span></label>
-                    <!-- TODO Add: form__input-section--error -->
-                    <div class="form__input-section">
-                        <input class="adding-post__input form__input" id="photo-heading" type="text" name="heading" placeholder="Введите заголовок" value="<?= $val_input; ?>">
+                    <div class="form__input-section <?= !empty($form_errors['heading']) ? 'form__input-section--error' : '' ?>">
+                        <input class="adding-post__input form__input" id="photo-heading" type="text" name="heading" placeholder="Введите заголовок" value="<?= !empty($post_data['heading']) ? $post_data['heading'] : ''; ?>">
                         <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                         <!-- Error text -->
-                        <?= $block_error; ?>
+                        <?= $block_error['heading'] ?? '' ; ?>
                         <!-- End error text -->
                         <input class="adding-post__input form__input visually-hidden" type="text" name="type-post" value="<?= $type_id; ?>">
                     </div>
@@ -31,10 +30,10 @@
                 <div class="adding-post__input-wrapper form__input-wrapper">
                     <label class="adding-post__label form__label" for="photo-tags">Теги</label>
                     <div class="form__input-section">
-                        <input class="adding-post__input form__input" id="photo-tags" type="text" name="tags" placeholder="Введите теги" value="<?= $val_input; ?>">
+                        <input class="adding-post__input form__input" id="photo-tags" type="text" name="tags" placeholder="Введите теги" value="<?= !empty($post_data['tags']) ? $post_data['tags'] : ''; ?>">
                         <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                         <!-- Error text -->
-                        <?= $block_error; ?>
+                        <?= $block_error['tags'] ?? ''; ?>
                         <!-- End error text -->
                     </div>
                 </div>

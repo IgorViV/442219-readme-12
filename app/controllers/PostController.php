@@ -136,17 +136,19 @@ class PostController extends BaseController
         $user_name = 'Igor';
         // =================
 
-        $type = new Type();
-        $types = $type->findAll();
         $filter_content = '';
         $tabs_content = '';
         $form_content = '';
         $form_file = '';
-        $val_input = '';
         $form_errors = [];
-        $block_error = '';
+        $block_field_errors = [];
         $is_selected = false;
+        $is_valid = true;
         $labels = [];
+        $post_data = [];
+
+        $type = new Type();
+        $types = $type->findAll();
 
         $type_id = filter_input(INPUT_GET, 'type') ?? '1';
 
@@ -157,10 +159,20 @@ class PostController extends BaseController
             $title_type = $type->findOne($type_id)['alias'];
             $form_name = 'Readme\app\forms\\' . ucfirst($title_type) . 'Form';
 
-            $cur_form = new $form_name;
-            $cur_form->validate();
-            $form_errors = $cur_form->getAllErrors();
-            $labels = $cur_form->getAllLabels();
+            $post_form = new $form_name;
+            $post_form->validate();
+            $form_errors = $post_form->getAllErrors();
+            debug($form_errors);
+            $labels = $post_form->getAllLabels();
+            $post_data = $post_form->getData();
+
+            foreach($form_errors as $field_name => $errors) {
+                $block_errors = $this->getTemplate("blocks-add/block-form-error-text.php", [
+                    'title' => $labels[$field_name],
+                    'errors' => $errors,
+                ]);
+                $block_field_errors[$field_name] = $block_errors;
+            }
         }
 
         foreach($types as $type) {
@@ -186,18 +198,11 @@ class PostController extends BaseController
                 $form_file = '';
             }
 
-            $block_error = $this->getTemplate("blocks-add/block-form-error-text.php", [
-                // 'type' => $type,
-                // 'is_selected' => $is_selected,
-                // 'form_errors' => $form_errors,
-                // 'val_input' => $val_input,
-            ]);
-
             $form_content = $this->getTemplate("blocks-add/block-form-{$type['alias']}.php", [
                 'form_errors' => $form_errors,
-                'val_input' => $val_input,
-                'block_error' => $block_error,
+                'block_error' => $block_field_errors,
                 'labels' => $labels,
+                'post_data' => $post_data,
             ]);
 
             $tabs_content .= $this->getTemplate("blocks-add/block-tabs.php", [
@@ -205,10 +210,10 @@ class PostController extends BaseController
                 'form_errors' => $form_errors,
                 'form_content' => $form_content,
                 'form_file' => $form_file,
-                'val_input' => $val_input,
-                'block_error' => $block_error,
+                'block_error' => $block_field_errors,
                 'type_id' => $type_id,
                 'labels' => $labels,
+                'post_data' => $post_data,
             ]);
         }
 

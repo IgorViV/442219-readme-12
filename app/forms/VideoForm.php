@@ -8,6 +8,12 @@ use Readme\app\forms\Form;
  */
 class VideoForm extends Form
 {
+    protected $fields = [
+        'heading',
+        'video-url',
+        'tags',
+    ];
+
     protected $rules = [
         'heading' => ['required'],
         'video-url' => ['required', 'url', 'video'],

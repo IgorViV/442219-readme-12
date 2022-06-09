@@ -16,7 +16,7 @@ class Form
 
     public function __construct()
     {
-        // echo 'Form::__constructor'; // TODO What?
+        $this->fillFormData();
     }
 
     /**
@@ -69,7 +69,7 @@ class Form
      */
     protected function runEmailValidator(string $field_name)
     {
-        if (!filter_input(INPUT_POST, $field_name, FILTER_VALIDATE_EMAIL)) {
+        if (filter_input(INPUT_POST, $field_name) && !filter_input(INPUT_POST, $field_name, FILTER_VALIDATE_EMAIL)) {
             $this->errors[$field_name][] = 'Введите корректный email';
 
             return false;
@@ -105,7 +105,7 @@ class Form
      */
     protected function runUrlValidator(string $field_name)
     {
-        if (!filter_input(INPUT_POST, $field_name, FILTER_VALIDATE_URL)) {
+        if (filter_input(INPUT_POST, $field_name) && !filter_input(INPUT_POST, $field_name, FILTER_VALIDATE_URL)) {
             $this->errors[$field_name][] = 'Введите корректный URL';
 
             return false;
@@ -223,5 +223,24 @@ class Form
     public function getAllLabels(): array
     {
         return $this->labels;
+    }
+
+    /**
+     * Get data from all form fields
+     */
+    public function getData()
+    {
+        return $this->form_data;
+    }
+
+    /**
+     * Fills the array with data from the form
+     */
+    protected function fillFormData()
+    {
+        foreach($this->fields as $field) {
+            // $this->form_data[$field] = !empty($_POST[$field] ) ? htmlspecialchars($_POST[$field]) : null;
+            $this->form_data[$field] = filter_input(INPUT_POST, $field, FILTER_SANITIZE_SPECIAL_CHARS);
+        }
     }
 }
