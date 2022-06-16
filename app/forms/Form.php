@@ -1,18 +1,22 @@
 <?php
 namespace Readme\app\forms;
 
+use finfo;
+use Readme\app\models\Post;
+
 /**
  * Base class for form processing
  */
-class Form
+abstract class Form
 {
     protected $rules = [];
     protected $labels = [];
     protected $form_data = [];
     protected $errors = [];
-    protected $fields = [];
-
-    // protected $model;
+    protected $fields_db = [];
+    protected $file_url = '';
+    protected $data_db = [];
+    protected $name_model_class = 'Post';
 
     public function __construct()
     {
@@ -53,7 +57,7 @@ class Form
      */
     protected function runRequiredValidator(string $field_name)
     {
-        if (empty(trim($_POST[$field_name]))) {
+        if (strlen(trim($_POST[$field_name])) === 0) {
             $this->errors[$field_name][] = 'Это поле должно быть заполнено';
 
             return false;
@@ -87,7 +91,7 @@ class Form
      */
     protected function runLengthValidator(string $field_name, int $min = MIN_LENGTH, int $max = MAX_LENGTH)
     {
-        $len = strlen($_POST[$field_name]);
+        $len = strlen(trim($_POST[$field_name]));
 
         if ($len < $min or $len > $max) {
             $this->errors[$field_name][] = "Значение должно быть от $min до $max символов";
@@ -115,26 +119,13 @@ class Form
     }
 
     /**
-     * Validate file
-     *
-     * @var string Field name
-     */
-    protected function runFileValidator(string $field_name)
-    {
-        // TODO Implementation method()
-
-        return true;
-    }
-
-    /**
      * Validate tags
      *
      * @var string Field name
      */
     protected function runTagsValidator(string $field_name)
     {
-        // TODO Implementation method()
-        // - Валидация поля «Теги»
+        // TODO - Валидация поля «Теги»
         // В этом поле пользователь вводит теги, к которым относится публикация.
         // Теги разделяются пробелом. Выполняя валидацию, нужно убедиться,
         // что в поле одно или больше слов, а сами слова разделены пробелом.
@@ -153,49 +144,40 @@ class Form
      */
     protected function runImgValidator(string $field_name)
     {
-        // TODO Implementation method()
 
-        // === Валидация записи типа «Картинка» ===
-        // - При заполнении формы пользователю обязательно надо выбрать файл изображения
-        // со своего компьютера, либо указать прямую ссылку на изображение, размещенное в интернете.
-        // Следовательно, надо написать правило валидации, которое проверяет, что минимум одно из
-        // полей заполнено.
-        // Если заполнены оба поля, то игнорировать содержимое поля «Ссылка из интернета».
-        // - Валидация поля «Выбор файла»
-        // Обязательно проверять MIME-тип загруженного файла. Формат загруженного файла
-        // должен быть изображением одного из следующих типов: png, jpeg, gif.
-        // Выбранный файл сохранить в отдельной,
-        // публичной папке и добавить ссылку на изображение в таблицу постов вместе с остальной информацией.
-        // - Валидация поля «Ссылка из интернета»
-        // Сперва следует проверить правильность формата. Значение поля должно быть
-        // корректным URL-адресом. Используйте встроенную функцию filter_var и фильтр FILTER_VALIDATE_URL.
-        // Затем по указанной ссылке необходимо скачать файл изображения, сохранить его в публичной папке
-        // и добавить ссылку на изображение в таблицу постов вместе с остальной информацией.
-        // Получить содержимое удалённого файла можно, например, встроенной функцией file_get_contents.
-        // Если функция вернула false или пустую строку, значит файл загрузить не получилось.
-        // Такая ситуация должна являться ошибкой валидации поля.
+        if (!empty($_FILES[$field_name]['name'])) {
+            $tmp_name = $_FILES[$field_name]['tmp_name'];
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $file_type = $finfo->file($tmp_name);
+            $file_ext = $this->getFileExtension($file_type, IMAGE_EXT);
+
+            if (!$file_ext) {
+                $this->errors[$field_name][] = 'Загрузите изображение в формате JPEG, PNG или GIF';
+
+                return false;
+            }
+        }
 
         return true;
     }
 
     /**
-     * Validate video
+     * Gets the file extension by its type
      *
-     * @var string Field name
+     * @var string File type
+     * @var array File extensions
+     *
+     * @return string Extention | false
      */
-    protected function validateVideo(string $field_name)
+    protected function getFileExtension(string $file_type, array $file_ext)
     {
-        // TODO Implementation method()
-        // === Валидация записи типа «Видео»:
-        // При заполнении формы пользователь обязательно указывает ссылку на видео,
-        // размещённое на сайте YouTube.
-        // Сперва следует проверить правильность формата. Значение поля должно быть корректным URL-адресом.
-        // Используйте встроенную функцию filter_var и фильтр FILTER_VALIDATE_URL.
-        // Затем происходит проверка существования видео по указанной ссылке на платформе YouTube.
-        // Эту проверку можно провести с помощью функции check_youtube_url, которая лежит
-        // в папке с проектом в сценарии helpers.php.
+        foreach($file_ext as $type => $extension) {
+            if ($file_type === $type) {
+                return $extension;
+            }
+        }
 
-        return true;
+        return false;
     }
 
     /**
@@ -238,9 +220,62 @@ class Form
      */
     protected function fillFormData()
     {
-        foreach($this->fields as $field) {
-            // $this->form_data[$field] = !empty($_POST[$field] ) ? htmlspecialchars($_POST[$field]) : null;
-            $this->form_data[$field] = filter_input(INPUT_POST, $field, FILTER_SANITIZE_SPECIAL_CHARS);
+        $fields = array_values($this->fields_db);
+        foreach($fields as $field) {
+            if ($field === 'file-photo') {
+                $this->form_data[$field] = $this->file_url;
+            } else {
+                $this->form_data[$field] = filter_input(INPUT_POST, $field, FILTER_SANITIZE_SPECIAL_CHARS);
+            }
         }
+    }
+
+    /**
+     * Uploads file
+     */
+    public function uploadsFile()
+    {
+        if (isset($_FILES['file-photo']['name'])) {
+            $file_name = $_FILES['file-photo']['name'];
+            $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
+            $file_name = uniqid() . '.' . $file_ext;
+            $file_path = './uploads/';
+            $this->file_url = './uploads/' . $file_name;
+            move_uploaded_file($_FILES['file-photo']['tmp_name'], $file_path . $file_name);
+            $this->fillFormData();
+        }
+    }
+
+    /**
+     * Prepares data for writing to the database
+     */
+    protected function prepareDataDb(int $user_id, int $type_id)
+    {
+        foreach($this->fields_db as $field_db => $field_form) {
+            foreach($this->form_data as $field => $value) {
+                if ($field_form === $field) {
+                    $this->data_db[$field_db] = $value;
+                }
+            }
+        }
+        $this->data_db['user_id'] = $user_id;
+        $this->data_db['type_id'] = $type_id;
+    }
+
+    /**
+     * Writing to the database
+     *
+     * @param object Object of the model class
+     */
+    public function writeDb(object $model, $user_id, $type_id)
+    {
+        $this->prepareDataDb($user_id, $type_id);
+
+        if(count($this->data_db)){
+            $model->add(array_keys($this->data_db), array_values($this->data_db));
+            var_dump($this->data_db);
+        }
+
+        return $model->getLastId();
     }
 }

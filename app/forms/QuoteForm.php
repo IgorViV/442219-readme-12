@@ -15,6 +15,12 @@ class QuoteForm extends Form
         'tags',
     ];
 
+    protected $fields_db = [
+        'title' => 'heading',
+        'text_content' => 'quote',
+        'author_quote' => 'quote-author',
+    ];
+
     protected $rules = [
         'heading' => ['required'],
         'quote' => ['required'],

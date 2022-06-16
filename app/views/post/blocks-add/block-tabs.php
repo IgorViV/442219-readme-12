@@ -44,7 +44,7 @@
                 <ul class="form__invalid-list">
                     <?php foreach($form_errors as $field => $message): ?>
                     <li class="form__invalid-item">
-                        <?= $labels[$field]; ?>. <?= implode(", ", $message); ?>.
+                        <?= $labels[$field] ?? ''; ?>. <?= implode(", ", $message); ?>.
                     </li>
                     <?php endforeach; ?>
                 </ul>

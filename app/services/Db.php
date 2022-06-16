@@ -84,4 +84,12 @@ class Db
     {
         return $this->connect->prepare($sql);
     }
+
+    /**
+     * Gets the id of the last record made
+     */
+    public function lastId()
+    {
+        return $this->connect->insert_id;
+    }
 }

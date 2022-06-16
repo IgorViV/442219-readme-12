@@ -5,6 +5,7 @@ use Readme\app\controllers\BaseController;
 use Readme\app\models\Post;
 use Readme\app\models\Type;
 use Readme\app\models\Comment;
+use Readme\app\exceptions\ExceptionDbWrite;
 
 /**
  * Description of PostController
@@ -134,6 +135,7 @@ class PostController extends BaseController
         // TODO Delete after authorization is implemented
         $is_auth = true;
         $user_name = 'Igor';
+        $user_id = 1;
         // =================
 
         $filter_content = '';
@@ -143,28 +145,24 @@ class PostController extends BaseController
         $form_errors = [];
         $block_field_errors = [];
         $is_selected = false;
-        $is_valid = true;
         $labels = [];
-        $post_data = [];
+        $form_data = [];
 
         $type = new Type();
         $types = $type->findAll();
 
         $type_id = filter_input(INPUT_GET, 'type') ?? '1';
 
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        if ($method === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $type_id = filter_input(INPUT_POST, 'type-post');
             $title_type = $type->findOne($type_id)['alias'];
             $form_name = 'Readme\app\forms\\' . ucfirst($title_type) . 'Form';
 
             $post_form = new $form_name;
             $post_form->validate();
-            $form_errors = $post_form->getAllErrors();
-            debug($form_errors);
+            $form_errors = array_filter($post_form->getAllErrors());
             $labels = $post_form->getAllLabels();
-            $post_data = $post_form->getData();
+            $form_data = $post_form->getData();
 
             foreach($form_errors as $field_name => $errors) {
                 $block_errors = $this->getTemplate("blocks-add/block-form-error-text.php", [
@@ -172,6 +170,20 @@ class PostController extends BaseController
                     'errors' => $errors,
                 ]);
                 $block_field_errors[$field_name] = $block_errors;
+            }
+
+            if (!$form_errors) {
+                $post_form->uploadsFile();
+                $form_data = $post_form->getData();
+                $new_post = new Post();
+
+                try {
+                    $new_post_id = $post_form->writeDb($new_post, $user_id, $type_id);
+                    header("Location: /post/view?id=" . $new_post_id);
+                } catch(ExceptionDbWrite $e) {
+                    echo 'Ошибка записи в БД: ' . $e->getMessage();
+                    exit;
+                }
             }
         }
 
@@ -202,7 +214,7 @@ class PostController extends BaseController
                 'form_errors' => $form_errors,
                 'block_error' => $block_field_errors,
                 'labels' => $labels,
-                'post_data' => $post_data,
+                'post_data' => $form_data,
             ]);
 
             $tabs_content .= $this->getTemplate("blocks-add/block-tabs.php", [
@@ -213,7 +225,7 @@ class PostController extends BaseController
                 'block_error' => $block_field_errors,
                 'type_id' => $type_id,
                 'labels' => $labels,
-                'post_data' => $post_data,
+                'post_data' => $form_data,
             ]);
         }
 

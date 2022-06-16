@@ -99,7 +99,7 @@ abstract class Model
      */
     public function getLastId()
     {
-        return $this->db_connect->insert_id;
+        return $this->db_connect->lastId();
     }
 
     /**

@@ -8,10 +8,9 @@ use Readme\app\forms\Form;
  */
 class TextForm extends Form
 {
-    protected $fields = [
-        'heading',
-        'text',
-        'tags',
+    protected $fields_db = [
+        'title' => 'heading',
+        'text_content' => 'text',
     ];
 
     protected $rules = [

@@ -3,21 +3,13 @@
  * Displays the fields of the file addition form
  */
 ?>
-<div class="adding-post__input-file-container form__input-container form__input-container--file">
-    <div class="adding-post__input-file-wrapper form__input-file-wrapper">
-        <div class="adding-post__file-zone adding-post__file-zone--photo form__file-zone dropzone">
-            <input class="adding-post__input-file form__input-file" id="userpic-file-photo" type="file" name="file-photo" title=" ">
-            <div class="form__file-zone-text">
-                <span>Перетащите фото сюда</span>
-            </div>
-        </div>
-        <button class="adding-post__input-file-button form__input-file-button form__input-file-button--photo button" type="button">
-            <span>Выбрать фото</span>
-            <svg class="adding-post__attach-icon form__attach-icon" width="10" height="20">
-                <use xlink:href="#icon-attach"></use>
-            </svg>
-        </button>
-    </div>
-    <div class="adding-post__file adding-post__file--photo form__file dropzone-previews">
+<div class="adding-post__textarea-wrapper form__input-wrapper">
+    <label class="adding-post__label form__label" for="file-photo">Файл изображения</label>
+    <div class="form__input-section <?= !empty($form_errors['file-photo']) ? 'form__input-section--error' : '' ?>">
+        <input class="adding-post__input form__input" id="file-photo" type="file" name="file-photo">
+        <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
+        <!-- Error text -->
+        <?= $block_error['file-photo'] ?? ''; ?>
+        <!-- End error text -->
     </div>
 </div>
