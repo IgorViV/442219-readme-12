@@ -14,3 +14,11 @@ const MAX_POSTS = 10;
 const MAX_COMM = 3;
 const TYPE_ALL = 0;
 const CURRENT_SORT = 'popular';
+const MIN_LENGTH = 1;
+const MAX_LENGTH = 10;
+
+const IMAGE_EXT = [
+    'image/jpeg' => '.jpg',
+    'image/png' => '.png',
+    'image/gif' => '.gif',
+];

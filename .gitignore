@@ -10,4 +10,4 @@ Thumbs.db
 vendor
 web/uploads/*
 !web/uploads/.gitkeep
-config/config.php
+config/database.php

@@ -99,7 +99,7 @@ abstract class Model
      */
     public function getLastId()
     {
-        return $this->db_connect->insert_id;
+        return $this->db_connect->lastId();
     }
 
     /**
@@ -172,7 +172,7 @@ abstract class Model
     /**
      * Description of fetchAssoc()
      */
-    protected function fetchAssoc(string $sql, array $data)
+    protected function fetchAssoc(string $sql, array $data) // TODO What is it?
     {
         $stmt = $this->getPrepareStmt($sql, $data);
 
