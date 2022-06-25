@@ -189,11 +189,7 @@ class PostController extends BaseController
 
         foreach($types as $type) {
 
-            if ((int)$type_id === $type['id']) {
-                $is_selected = true;
-            } else {
-                $is_selected = false;
-            }
+            $is_selected = (int)$type_id === $type['id'];
 
             $filter_content .= $this->getTemplate("blocks-add/block-filter.php", [
                 'type' => $type,
