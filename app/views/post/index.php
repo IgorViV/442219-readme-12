@@ -2,10 +2,10 @@
 /**
  * View page popular posts
  *
- * @var string HTML popular posts
- * @var array Type posts
- * @var string ID type from GET request
- * @var string Method of sorting posts
+ * @var string $popular_posts HTML popular posts
+ * @var array $types Type posts
+ * @var string $type_id ID type from GET request
+ * @var string $posts_sort Method of sorting posts
  */
 ?>
 <section class="page__main page__main--popular">

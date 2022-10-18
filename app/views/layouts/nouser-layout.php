@@ -1,6 +1,8 @@
 <?php
 /**
  * Layout from unregistred users
+ *
+ * @var string $content Content page
  */
 ?>
 <!DOCTYPE html>

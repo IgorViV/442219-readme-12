@@ -1,0 +1,17 @@
+{
+    "name": "igorviv/readme-second",
+    "autoload": {
+        "psr-4": {
+            "Readme\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "IgorViV",
+            "email": "iupgrader@mail.ru"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}

@@ -2,7 +2,7 @@
 /**
  * Main layout
  *
- * @var string $page_content Content page
+ * @var string $content Content page
  * @var string $title_page Title page
  * @var bool $is_auth The user is logged in
  * @var string $user_name Name of the authorized user
