@@ -2,8 +2,8 @@
 /**
  * Description of add
  *
- * @var string Content of filter
- * @var string List of form
+ * @var string $filter_content Content of filter
+ * @var string $tabs_content List of form
  */
 ?>
 <main class="page__main page__main--adding-post">

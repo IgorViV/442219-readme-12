@@ -4,8 +4,10 @@
  *
  * @var string $content Content page
  * @var string $title_page Title page
- * @var bool $is_auth The user is logged in
- * @var string $user_name Name of the authorized user
+ * @var bool $is_auth The auth is logged in
+ * @var bool $is_reg The registration button is set
+ * @var bool $is_search The search panel is set
+ * @var string $user_name Name of the authorized auth
  */
 ?>
 <!DOCTYPE html>
@@ -32,6 +34,9 @@
                 micro blogging
             </p>
         </div>
+        <!-- Форму поиска можно -->
+        <!-- $is_search = false; удалена на странице регистрации -->
+        <?php if ($is_search): ?>
         <form class="header__search-form form" action="#" method="get">
             <div class="header__search">
                 <label class="visually-hidden">Поиск</label>
@@ -44,9 +49,13 @@
                 </button>
             </div>
         </form>
+        <?php endif; ?>
+        <!-- Панель навигации -->
         <div class="header__nav-wrapper">
-            <?php if ($is_auth): ?>
             <nav class="header__nav">
+                <!-- Панель навигации по контенту -->
+                <!-- $is_auth = true; активна для зарегистрированных пользователей -->
+                <?php if ($is_auth): ?>
                 <ul class="header__my-nav">
                     <li class="header__my-page header__my-page--popular">
                         <a class="header__page-link header__page-link--active" title="Популярный контент">
@@ -64,7 +73,8 @@
                         </a>
                     </li>
                 </ul>
-                <!-- здесь должен быть PHP код, который показывает следующий тег по условию -->
+                <!-- Панель пользователя -->
+                <!-- $is_auth = true; активна для зарегистрированных пользователей -->
                 <ul class="header__user-nav">
                     <li class="header__profile">
                         <a class="header__profile-link" href="#">
@@ -98,7 +108,6 @@
                                             </span>
                                         </a>
                                     </li>
-
                                     <li class="header__profile-nav-item">
                                         <a class="header__profile-nav-link" href="#">
                                             <span class="header__profile-nav-text">
@@ -111,12 +120,38 @@
                         </div>
                     </li>
                     <li>
-                        <!-- TODO Disabled in add mode -->
-                        <a class="header__post-button button button--transparent" href="/post/add">Пост</a>
+                        <?php if (trim($_SERVER['REQUEST_URI'], '/') !== 'post/add'): ?>
+                        <a class="header__post-button button button--transparent" href="/post/add">
+                            Пост
+                        </a>
+                        <?php else: ?>
+                        <!-- TODO указать путь на предыдущую страницу -->
+<!--                            javascript:history.go(-1)-->
+                        <a class="header__post-button header__post-button--active button button--transparent" href="#">
+                           Закрыть
+                        </a>
+                        <?php endif; ?>
                     </li>
                 </ul>
+                <?php endif; ?>
+                <!-- Панель регистрации -->
+                <!-- $is_reg = true; активна на странице регистрации -->
+                <?php if ($is_reg): ?>
+                <ul class="header__user-nav">
+                    <li class="header__authorization">
+<!--                        TODO -->
+                        <a class="header__user-button header__authorization-button button" href="../">
+                            Вход
+                        </a>
+                    </li>
+                    <li>
+                        <a class="header__user-button header__user-button--active header__register-button button">
+                            Регистрация
+                        </a>
+                    </li>
+                </ul>
+                <?php endif; ?>
             </nav>
-            <?php endif; ?>
         </div>
     </div>
 </header>

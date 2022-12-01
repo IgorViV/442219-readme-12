@@ -14,18 +14,18 @@ class VideoForm extends Form
     //     'tags',
     // ];
 
-    protected $fields_db = [
+    protected array $fields_db = [
         'title' => 'heading',
-        'video_url' => 'video=url',
+        'video_url' => 'video-url',
     ];
 
-    protected $rules = [
+    protected array $rules = [
         'heading' => ['required'],
         'video-url' => ['video'], // required, url
         'tags' => ['tags'],
     ];
 
-    protected $labels = [
+    protected array $labels = [
         'heading' => 'Заголовок',
         'video-url' => 'Ссылка youtube',
         'tags' => 'Теги',

@@ -2,8 +2,8 @@
 /**
  * Displays the fields of the text addition form
  *
- * @var string Value input field
- * @var array Form validation errors
+ * @var array $post_data Value input field
+ * @var array $form_errors Form validation errors
  */
 ?>
 <div class="adding-post__textarea-wrapper form__textarea-wrapper">

@@ -8,24 +8,24 @@ use Readme\app\forms\Form;
  */
 class LinkForm extends Form
 {
-    protected $fields = [
+    protected array $fields = [
         'heading',
         'link',
         'tags',
     ];
 
-    protected $fields_db = [
+    protected array $fields_db = [
         'title' => 'heading',
         'site_url' => 'link',
     ];
 
-    protected $rules = [
+    protected array $rules = [
         'heading' => ['required'],
         'link' => ['required', 'url'],
         'tags' => ['tags'],
     ];
 
-    protected $labels = [
+    protected array $labels = [
         'heading' => 'Заголовок',
         'link' => 'Ссылка',
         'tags' => 'Теги',

@@ -1,7 +1,6 @@
 <?php
 namespace Readme\app\controllers;
 
-use Readme\app\controllers\BaseController;
 use Readme\app\models\Post;
 use Readme\app\models\Type;
 use Readme\app\models\Comment;
@@ -12,16 +11,19 @@ use Readme\app\exceptions\ExceptionDbWrite;
  */
 class PostController extends BaseController
 {
-    protected $layout = 'layout';
-    protected $title_page = 'Популярные посты';
+    protected ?string $layout = 'layout';
+    protected string $title_page = 'Readme: популярное';
+//    protected $is_search = false;
+//    protected $is_reg = true;
 
     /**
      * Actions for displaying popular posts
      */
     public function actionIndex()
     {
+//        $this->is_auth = true;
+        $this->is_auth = isset($_SESSION['user']);
         // TODO Delete after authorization is implemented
-        $is_auth = true;
         $user_name = 'Igor';
         // =================
 
@@ -65,9 +67,11 @@ class PostController extends BaseController
             'types' => $types,
             'type_id' => $type_id,
             'posts_sort' => $posts_sort,
-            'is_auth' => $is_auth,
+            'is_auth' => $this->is_auth,
             'user_name' => $user_name,
-            'title_page' =>$this->title_page,
+            'title_page' => $this->title_page,
+            'is_search' => $this->is_search,
+            'is_reg' => $this->is_reg,
         ]);
 
         $this->getView();
@@ -78,8 +82,8 @@ class PostController extends BaseController
      */
     public function actionView()
     {
+        $this->is_auth = true; //isset($_SESSION['user']);
         // TODO Delete after authorization is implemented
-        $is_auth = true;
         $user_name = 'Igor';
         // =================
 
@@ -95,12 +99,14 @@ class PostController extends BaseController
         $all_comments = $comment->findAllByPost($post_id);
 
         $this->setData([
-            'is_auth' => $is_auth,
+            'is_auth' => $this->is_auth,
             'user_name' => $user_name,
             'title_page' =>$this->title_page,
             'post' => $cur_post,
             'post_content' => $post_content,
             'comments' => $all_comments,
+            'is_search' => $this->is_search,
+            'is_reg' => $this->is_reg,
         ]);
         $this->getView();
 
@@ -112,7 +118,7 @@ class PostController extends BaseController
         // +* @var int Number of comments
         // * @var int Number of repost
         // * @var array Hashtags
-        // * @var string URL avatar current user for form new comments
+        // * @var string URL avatar current auth for form new comments
         // * @var string URL avatar of the author of the comment
         // * @var string Name of the comment author
         // * @var string Datatime of writing the comment
@@ -132,8 +138,8 @@ class PostController extends BaseController
      */
     public function actionAdd()
     {
+        $this->is_auth = true; //isset($_SESSION['user']);
         // TODO Delete after authorization is implemented
-        $is_auth = true;
         $user_name = 'Igor';
         $user_id = 1;
         // =================
@@ -226,12 +232,15 @@ class PostController extends BaseController
         }
 
         $this->setData([
-            'is_auth' => $is_auth,
+            'is_auth' => $this->is_auth,
             'user_name' => $user_name,
-            'title_page' =>$this->title_page,
+            'title_page' => 'Readme: публикация поста', //$this->title_page, // Readme: публикация поста
             'filter_content' => $filter_content,
             'tabs_content' => $tabs_content,
+            'is_search' => $this->is_search,
+            'is_reg' => $this->is_reg,
         ]);
+
         $this->getView();
     }
 }

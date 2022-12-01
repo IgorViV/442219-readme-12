@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * View main page
  */
 ?>
 <h1 class="visually-hidden">Главная страница сайта по созданию микроблога readme</h1>
