@@ -2,9 +2,8 @@
 /**
  * Description of block template
  *
- * @var array Post content types
- * @var int ID type from the query string
- * @var bool Tab is selected
+ * @var array $type Post content types
+ * @var bool $is_selected Tab is selected
  */
 ?>
 <li class="adding-post__tabs-item filters__item">

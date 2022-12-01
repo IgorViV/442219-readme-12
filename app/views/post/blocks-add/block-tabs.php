@@ -2,10 +2,12 @@
 /**
  * Displays the general part of the form tabs
  *
- * @var string Content form
- * @var string Type of form
- * @var bool Tab is selected
- * @var array Form validation errors
+ * @var string $form_content Content form
+ * @var array $type Type of form
+ * @var bool $is_selected Tab is selected
+ * @var array $form_errors Form validation errors
+ * @var string $form_file Block added file
+ * @var string $type_id ID type content
  */
 ?>
 <section class="adding-post__photo tabs__content <?php if($is_selected): ?>tabs__content--active <?php endif; ?>">

@@ -8,27 +8,27 @@ use Readme\app\forms\Form;
  */
 class QuoteForm extends Form
 {
-    protected $fields = [
+    protected array $fields = [
         'heading',
         'quote',
         'quote-author',
         'tags',
     ];
 
-    protected $fields_db = [
+    protected array $fields_db = [
         'title' => 'heading',
         'text_content' => 'quote',
         'author_quote' => 'quote-author',
     ];
 
-    protected $rules = [
+    protected array $rules = [
         'heading' => ['required'],
         'quote' => ['required'],
         'quote-author' => ['required'],
         'tags' => ['tags'],
     ];
 
-    protected $labels = [
+    protected array $labels = [
         'heading' => 'Заголовок',
         'quote' => 'Текст цитаты',
         'quote-author' => 'Автор',

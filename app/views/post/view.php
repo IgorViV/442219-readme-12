@@ -3,17 +3,17 @@
  * View page details of post by id
  *
  * @var array $post
- * @var string Typed site content (block template)
+ * @var string $post_content Typed site content (block template)
  * @var string Title post
  * @var int Number of likes
  * @var int Number of comments
  * @var int Number of repost
  * @var array Hashtags
- * @var string URL avatar current user for form new comments
+ * @var string URL avatar current auth for form new comments
  * @var string URL avatar of the author of the comment
  * @var string Name of the comment author
  * @var string Datatime of writing the comment
- * @var string Comment text
+ * @var string $comments Comment text
  * @var string URL avatar of the author current post
  * @var string Name of the current post author
  * @var string Datetime registration author of the current post
@@ -76,7 +76,7 @@
                     <div class="comments">
                         <form class="comments__form form" action="#" method="post">
                             <div class="comments__my-avatar">
-                                <!-- TODO URL avatar current user for form new comments -->
+                                <!-- TODO URL avatar current auth for form new comments -->
                                 <img class="comments__picture" src="../img/userpic-medium.jpg" alt="Аватар пользователя">
                             </div>
                             <div class="form__input-section form__input-section--error">

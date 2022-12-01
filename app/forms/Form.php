@@ -2,21 +2,26 @@
 namespace Readme\app\forms;
 
 use finfo;
-use Readme\app\models\Post;
+use Readme\app\models\User;
 
 /**
  * Base class for form processing
  */
 abstract class Form
 {
-    protected $rules = [];
-    protected $labels = [];
-    protected $form_data = [];
-    protected $errors = [];
-    protected $fields_db = [];
-    protected $file_url = '';
-    protected $data_db = [];
-    protected $name_model_class = 'Post';
+    protected string $form_name = 'adding-post';
+    protected array $rules = [];
+    protected array $labels = [];
+    protected array $form_data = [];
+    protected array $errors = [];
+    protected array $fields = [];
+    protected array $types_fields = [];
+    protected array $fields_db = [];
+    protected string $file_field = 'file-photo'; // TODO refactoring: exclude
+    protected string $file_url = '';
+    protected string $file_path = './uploads/';
+    protected array $data_db = [];
+    protected array $placeholders;
 
     public function __construct()
     {
@@ -26,7 +31,7 @@ abstract class Form
     /**
      * Performs validation of form fields according to the rules
      */
-    public function validate()
+    public function validate(): void
     {
         foreach($this->rules as $field => $rules) {
             foreach($rules as $rule_name) {
@@ -38,10 +43,10 @@ abstract class Form
     /**
      * Launches the validator for the field
      *
-     * @var string Field name
-     * @var string Rule name
+     * @param string $field Field name
+     * @param string $rule_name Rule name
      */
-    protected function runValidator($field, $rule_name)
+    protected function runValidator(string $field, string $rule_name): void
     {
         $method_name = 'run' . ucfirst($rule_name) . 'Validator';
 
@@ -53,9 +58,10 @@ abstract class Form
     /**
      * Validate required field
      *
-     * @var string Field name
+     * @param string $field_name Field name
+     * @return bool
      */
-    protected function runRequiredValidator(string $field_name)
+    protected function runRequiredValidator(string $field_name): bool
     {
         if (strlen(trim($_POST[$field_name])) === 0) {
             $this->errors[$field_name][] = 'Это поле должно быть заполнено';
@@ -69,14 +75,28 @@ abstract class Form
     /**
      * Validate email field
      *
-     * @var string Field name
+     * @param string $field_name Email field name
+     * @return bool
      */
-    protected function runEmailValidator(string $field_name)
+    protected function runEmailValidator(string $field_name): bool
     {
-        if (filter_input(INPUT_POST, $field_name) && !filter_input(INPUT_POST, $field_name, FILTER_VALIDATE_EMAIL)) {
+        if (filter_input(INPUT_POST, $field_name) &&
+            !filter_input(INPUT_POST, $field_name, FILTER_VALIDATE_EMAIL)) {
             $this->errors[$field_name][] = 'Введите корректный email';
 
             return false;
+        }
+
+        if (empty($this->errors[$field_name])) {
+            $email = filter_input(INPUT_POST, $field_name, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $user = new User();
+            $id_users_for_email = $user->findUserEmail($email);
+
+            if (!empty($id_users_for_email)) {
+                $this->errors[$field_name][] = 'Пользователь с этим email уже зарегистрирован';
+
+                return false;
+            }
         }
 
         return true;
@@ -85,11 +105,12 @@ abstract class Form
     /**
      * Validate length value field
      *
-     * @var string Field name
-     * @var int Minimal value field
-     * @var int Maximal value field
+     * @param string $field_name Field name
+     * @param int $min Minimal value field
+     * @param int $max Maximal value field
+     * @return bool
      */
-    protected function runLengthValidator(string $field_name, int $min = MIN_LENGTH, int $max = MAX_LENGTH)
+    protected function runLengthValidator(string $field_name, int $min = MIN_LENGTH, int $max = MAX_LENGTH): bool
     {
         $len = strlen(trim($_POST[$field_name]));
 
@@ -105,9 +126,10 @@ abstract class Form
     /**
      * Validate link
      *
-     * @var string Field name
+     * @param string $field_name Field name
+     * @return bool
      */
-    protected function runUrlValidator(string $field_name)
+    protected function runUrlValidator(string $field_name): bool
     {
         if (filter_input(INPUT_POST, $field_name) && !filter_input(INPUT_POST, $field_name, FILTER_VALIDATE_URL)) {
             $this->errors[$field_name][] = 'Введите корректный URL';
@@ -121,9 +143,10 @@ abstract class Form
     /**
      * Validate tags
      *
-     * @var string Field name
+     * @param string $field_name Field name
+     * @return bool
      */
-    protected function runTagsValidator(string $field_name)
+    protected function runTagsValidator(string $field_name): bool
     {
         // TODO - Валидация поля «Теги»
         // В этом поле пользователь вводит теги, к которым относится публикация.
@@ -140,9 +163,10 @@ abstract class Form
     /**
      * Validate image
      *
-     * @var string Field name
+     * @param string $field_name Field name
+     * @return bool
      */
-    protected function runImgValidator(string $field_name)
+    protected function runImgValidator(string $field_name): bool
     {
 
         if (!empty($_FILES[$field_name]['name'])) {
@@ -164,12 +188,12 @@ abstract class Form
     /**
      * Gets the file extension by its type
      *
-     * @var string File type
-     * @var array File extensions
+     * @param string $file_type File type
+     * @param array $file_ext File extensions
      *
-     * @return string Extention | false
+     * @return string|bool Extention | false
      */
-    protected function getFileExtension(string $file_type, array $file_ext)
+    protected function getFileExtension(string $file_type, array $file_ext): string | bool
     {
         foreach($file_ext as $type => $extension) {
             if ($file_type === $type) {
@@ -178,6 +202,37 @@ abstract class Form
         }
 
         return false;
+    }
+
+    /**
+     * Get all fields form
+     *
+     * @return array
+     */
+    public function getFields(): array
+    {
+        return $this->fields;
+    }
+
+    /**
+     * Get all fields_db form
+     *
+     * @return array
+     */
+    public function getFieldsDb(): array
+    {
+        return $this->fields_db;
+    }
+
+    /**
+     * Get type of field
+     *
+     * @var string $name_field Name field
+     * @return string Type of field
+     */
+    public function getTypeField(string $name_field): string
+    {
+        return $this->types_fields[$name_field];
     }
 
     /**
@@ -193,14 +248,17 @@ abstract class Form
     /**
      * Get a field error
      *
-     * @var string Field name
+     * @param string $field Field name
+     * @return string | null
      */
-    public function getError(string $field) {
+    public function getError(string $field): ?string
+    {
         return $this->errors[$field] ?? null;
     }
 
     /**
      * Get all labels form
+     * @return array
      */
     public function getAllLabels(): array
     {
@@ -208,9 +266,58 @@ abstract class Form
     }
 
     /**
-     * Get data from all form fields
+     * Get label field
+     *
+     * @param string $name_field Name field
+     * @return string
      */
-    public function getData()
+    public function getLabel(string $name_field): string
+    {
+        return $this->labels[$name_field];
+    }
+
+    /**
+     * Get all rules for field
+     *
+     * @param string $name_field
+     * @return array
+     */
+    public function getRulesField(string $name_field): array
+    {
+        return $this->rules[$name_field];
+    }
+
+    /**
+     * Get name the form
+     *
+     * @return string
+     */
+    public function getFormName(): string
+    {
+        return $this->form_name;
+    }
+
+    /**
+     * Get placeholder input field
+     *
+     * @param string $name_field
+     * @return string
+     */
+    public function getPlaceholder(string $name_field): string
+    {
+        if (array_key_exists($name_field, $this->placeholders)) {
+            return $this->placeholders[$name_field];
+        }
+
+        return '';
+    }
+
+    /**
+     * Get data from all form
+     *
+     * @return array
+     */
+    public function getData(): array
     {
         return $this->form_data;
     }
@@ -218,38 +325,65 @@ abstract class Form
     /**
      * Fills the array with data from the form
      */
-    protected function fillFormData()
+    protected function fillFormData(): void
     {
         $fields = array_values($this->fields_db);
+
         foreach($fields as $field) {
-            if ($field === 'file-photo') {
+            if ($field === $this->file_field) {
                 $this->form_data[$field] = $this->file_url;
             } else {
                 $this->form_data[$field] = filter_input(INPUT_POST, $field, FILTER_SANITIZE_SPECIAL_CHARS);
             }
+        }
+
+        if (in_array('password-repeat', $this->fields)) {
+            $this->form_data['password-repeat'] = filter_input(
+                INPUT_POST,
+                'password-repeat',
+                FILTER_SANITIZE_SPECIAL_CHARS);
         }
     }
 
     /**
      * Uploads file
      */
-    public function uploadsFile()
+    public function uploadsFile(): void
     {
         if (isset($_FILES['file-photo']['name'])) {
             $file_name = $_FILES['file-photo']['name'];
             $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
             $file_name = uniqid() . '.' . $file_ext;
-            $file_path = './uploads/';
-            $this->file_url = './uploads/' . $file_name;
-            move_uploaded_file($_FILES['file-photo']['tmp_name'], $file_path . $file_name);
+            $this->file_url = $this->file_path . $file_name;
+            move_uploaded_file($_FILES['file-photo']['tmp_name'], $this->file_url);
+            $this->fillFormData();
+        }
+    }
+
+    /**
+     * Uploads file
+     *
+     * @param string $file_field Name input file field in form
+     */
+    public function uploadsFileTest(string $file_field): void
+    {
+        if (isset($_FILES[$file_field]['name'])) {
+            $file_name = $_FILES[$file_field]['name'];
+            $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
+            $file_name = uniqid() . '.' . $file_ext;
+            $this->file_url = $this->file_path . $file_name;
+            move_uploaded_file($_FILES[$file_field]['tmp_name'], $this->file_url);
             $this->fillFormData();
         }
     }
 
     /**
      * Prepares data for writing to the database
+     *
+     * @param int $user_id
+     * @param int $type_id
      */
-    protected function prepareDataDb(int $user_id, int $type_id)
+    protected function prepareDataDb(int $user_id, int $type_id): void
     {
         foreach($this->fields_db as $field_db => $field_form) {
             foreach($this->form_data as $field => $value) {
@@ -265,17 +399,65 @@ abstract class Form
     /**
      * Writing to the database
      *
-     * @param object Object of the model class
+     * @param object $model Object of the model class
      */
-    public function writeDb(object $model, $user_id, $type_id)
+    public function writeDb(object $model, $user_id, $type_id): int
     {
         $this->prepareDataDb($user_id, $type_id);
 
         if(count($this->data_db)){
             $model->add(array_keys($this->data_db), array_values($this->data_db));
-            var_dump($this->data_db);
         }
 
         return $model->getLastId();
+    }
+
+    /**
+     * TEST Writing to the database
+     *
+     * @param object $model Object of the model class
+     */
+    public function writeDbTest(object $model): int
+    {
+        $this->prepareDataDbTest();
+
+        if(count($this->data_db)){
+            $model->add(array_keys($this->data_db), array_values($this->data_db));
+        }
+
+        return $model->getLastId();
+    }
+
+    /**
+     * TEST Prepares data for writing to the database
+     *
+     */
+    protected function prepareDataDbTest(): void
+    {
+        foreach($this->fields_db as $field_db => $field_form) {
+            foreach($this->form_data as $field => $value) {
+                if (($field_form === $field) && ($field !== 'password')) {
+                    $this->data_db[$field_db] = $value;
+                }
+                if (($field_form === $field) && ($field === 'password')) {
+                    $this->data_db[$field_db] = password_hash($value, PASSWORD_DEFAULT);
+                }
+            }
+        }
+    }
+
+    /**
+     * Add new data in form data for write database
+     *
+     * @param array $names_keys
+     * @param array $values_keys
+     * @return void
+     */
+    public function addData(array $names_keys, array $values_keys): void
+    {
+        $comb_array = array_combine($names_keys, $values_keys);
+        foreach ($comb_array as $key => $value) {
+            $this->form_data[$key] = $value;
+        }
     }
 }

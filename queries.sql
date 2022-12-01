@@ -65,12 +65,12 @@ SELECT COUNT(likes.id) like_count, posts.title, user_name AS author, types.title
   JOIN likes ON posts.id = likes.post_id
   GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;
 
--- get a list of posts for a specific user:
+-- get a list of posts for a specific auth:
 SELECT title
   FROM posts
   WHERE posts.user_id = 5;
 
--- get a list of comments for one post (the user's login must be in the comments):
+-- get a list of comments for one post (the auth's login must be in the comments):
 SELECT comments.content comment, users.user_name
   FROM comments
   JOIN users ON comments.author_id = users.id
@@ -79,7 +79,7 @@ SELECT comments.content comment, users.user_name
 -- add a like to a post:
 INSERT INTO likes SET user_id = 2, post_id = 5;
 
--- subscribe to a user:
+-- subscribe to a auth:
 INSERT INTO subscriptions (author_id, subscriber_id)
 VALUES
 (1, 5),

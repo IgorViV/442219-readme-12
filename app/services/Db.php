@@ -16,7 +16,7 @@ class Db
     {
         $db = require_once ROOT . '/config/database.php';
         try {
-            $this->connect = new \mysqli($db['host'], $db['user'], $db['password'], $db['database']);
+            $this->connect = new \mysqli($db['host'], $db['auth'], $db['password'], $db['database']);
             $this->connect->set_charset("utf8");
         } catch(ExceptionDbConnect $e) {
             echo 'Ошибка подключения к БД: ' . $e->getMessage();

@@ -4,17 +4,22 @@ namespace Readme\app\controllers;
 use Readme\app\services\View;
 
 /**
- * Description of BaseController
+ * BaseController
+ *
+ *
  */
 abstract class BaseController
 {
-    protected $title_page = 'Readme';
-    protected $route = [];
-    protected $layout;
-    protected $view;
-    protected $data = [];
+    protected string $title_page = 'Readme';
+    protected array $route = [];
+    protected ?string $layout = null;
+    protected ?string $view = null;
+    protected array $data = [];
+    protected bool $is_auth = false;
+    protected bool $is_search = true;
+    protected bool $is_reg = false;          // The registration button is set
 
-    public function __construct($route)
+    public function __construct(array $route)
     {
         $this->route = $route;
         $this->view = $route['action'];
@@ -23,7 +28,7 @@ abstract class BaseController
     /**
      * Description of getView()
      */
-    public function getView()
+    public function getView(): void
     {
         $cur_view = new View($this->route, $this->layout, $this->view);
         $cur_view->render($this->data);

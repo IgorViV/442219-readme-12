@@ -8,6 +8,8 @@ use Readme\app\services\Router;
 require_once '../app/services/helpers.php';
 require_once '../app/services/data.php';
 
+session_start();
+
 define('WWW', __DIR__);
 define('ROOT', dirname(__DIR__));
 define('APP', dirname(__DIR__) . '/app');

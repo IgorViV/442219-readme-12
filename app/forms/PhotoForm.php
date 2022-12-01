@@ -8,19 +8,19 @@ use Readme\app\forms\Form;
  */
 class PhotoForm extends Form
 {
-    protected $fields_db = [
+    protected array $fields_db = [
         'title' => 'heading',
         'img_url' => 'file-photo',
     ];
 
-    protected $rules = [
+    protected array $rules = [
         'heading' => ['required'],
         'photo-url' => ['link'],
         'tags' => ['tags'],
         'file-photo' => ['file'],
     ];
 
-    protected $labels = [
+    protected array $labels = [
         'heading' => 'Заголовок',
         'photo-url' => 'Ссылка из интернета',
         'tags' => 'Теги',
@@ -30,9 +30,9 @@ class PhotoForm extends Form
     /**
      * Validation of the image file selection field
      *
-     * @var string Field name
+     * @var string $field_name Field name
      */
-    protected function runFileValidator(string $field_name)
+    protected function runFileValidator(string $field_name): bool
     {
         if (empty($_FILES[$field_name]['name']) && empty($_POST['photo-url'])) {
             $this->errors[$field_name][] = 'Загрузите изображение или укажите ссылку';
@@ -51,9 +51,9 @@ class PhotoForm extends Form
     /**
      * Validation of the image file link field
      *
-     * @var string Field name
+     * @var string $field_name Field name
      */
-    protected function runLinkValidator(string $field_name)
+    protected function runLinkValidator(string $field_name): bool
     {
         if (!$this->runUrlValidator($field_name)) {
             return false;

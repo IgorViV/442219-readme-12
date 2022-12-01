@@ -4,7 +4,7 @@
  */
 return [
     'host' => '',
-    'user' => '',
+    'auth' => '',
     'password' => '',
     'database' => '',
 ];

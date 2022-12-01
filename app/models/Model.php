@@ -22,8 +22,8 @@ abstract class Model
     /**
      * Adds an entry to the database table
      *
-     * @param array $fields Name of fields
-     * @param array Svalues Field values
+     * @param array $fields Name of fields database table
+     * @param array $values Field values
      */
     public function add(array $fields, array $values)
     {
@@ -84,7 +84,7 @@ abstract class Model
      * Gets an entry by id only specified fields
      *
      * @param array $fields Fields of table
-     * @param string @id Id of record
+     * @param string $id Id of record
      */
     public function findFieldsOne(array $fields, string $id)
     {
@@ -151,7 +151,7 @@ abstract class Model
      *
      * @return object stmt
      */
-    protected function getPrepareStmt(string $sql, array $data)
+    protected function getPrepareStmt(string $sql, array $data): object
     {
         $stmt = $this->db_connect->prepare($sql);
 
@@ -162,6 +162,7 @@ abstract class Model
         $types = $this->getPrepareData($data)['types'];
 
         $stmt->bind_param($types, ...$data);
+
         if (!$stmt) {
             throw new ExceptionPrepareData('Не удалось связать подготовленное выражение с параметрами: ');
         }

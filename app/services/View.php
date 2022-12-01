@@ -11,27 +11,27 @@ class View
      *
      * @var array
      */
-    public $route = [];
+    public array $route = [];
 
     /**
      * Current view
      *
-     * @var string
+     * @var string|null
      */
-    public $view;
+    public ?string $view;
 
     /**
      * Current layout
      *
-     * @var string
+     * @var string|null
      */
-    public $layout;
+    public ?string $layout;
 
-    public function __construct($route, $layout = '', $view = '')
+    public function __construct(array $route, ?string $layout = '', ?string $view = '')
     {
         $this->route = $route;
-        if ($layout === false) {
-            $this->layout = false;
+        if ($layout === '') {
+            $this->layout = null;
         } else {
             $this->layout = $layout ?? LAYOUT;
         }
@@ -43,7 +43,7 @@ class View
      *
      * @param array $data Data
      */
-    public function render(array $data)
+    public function render(array $data): void
     {
         if (is_array($data)) {
             extract($data);
@@ -51,7 +51,7 @@ class View
 
         $content = $this->includeTemplate($data);
 
-        if ($this->layout !== false) {
+        if ($this->layout !== null) {
             $file_layout = APP . "/views/layouts/{$this->layout}.php";
             if (is_file($file_layout)) {
                 require $file_layout;

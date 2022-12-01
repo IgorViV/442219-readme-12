@@ -6,8 +6,10 @@
 *.psd
 *.sublime*
 .vscode
+tasks.txt
 Thumbs.db
 vendor
 web/uploads/*
 !web/uploads/.gitkeep
+!web/uploads/avatars/.gitkeep
 config/database.php
