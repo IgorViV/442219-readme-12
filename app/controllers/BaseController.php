@@ -18,6 +18,7 @@ abstract class BaseController
     protected bool $is_auth = false;
     protected bool $is_search = true;
     protected bool $is_reg = false;          // The registration button is set
+    protected string $uri_page = '';
 
     public function __construct(array $route)
     {

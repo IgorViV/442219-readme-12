@@ -21,11 +21,19 @@ class PostController extends BaseController
      */
     public function actionIndex()
     {
-//        $this->is_auth = true;
-        $this->is_auth = isset($_SESSION['user']);
+        if (!isset($_SESSION['auth'])) {
+            header("Location: /");
+
+            exit;
+        }
+
+        $this->is_auth = isset($_SESSION['auth']);
         // TODO Delete after authorization is implemented
         $user_name = 'Igor';
         // =================
+
+        $this->uri_page = 'post';
+//        debug($this->uri_page);
 
         $popular_posts = '';
         $type = new Type();
@@ -72,6 +80,7 @@ class PostController extends BaseController
             'title_page' => $this->title_page,
             'is_search' => $this->is_search,
             'is_reg' => $this->is_reg,
+            'uri_post' => $this->uri_page,
         ]);
 
         $this->getView();
@@ -82,7 +91,13 @@ class PostController extends BaseController
      */
     public function actionView()
     {
-        $this->is_auth = true; //isset($_SESSION['user']);
+        if (!isset($_SESSION['auth'])) {
+            header("Location: /");
+
+            exit;
+        }
+
+        $this->is_auth = isset($_SESSION['auth']);
         // TODO Delete after authorization is implemented
         $user_name = 'Igor';
         // =================
@@ -108,6 +123,7 @@ class PostController extends BaseController
             'is_search' => $this->is_search,
             'is_reg' => $this->is_reg,
         ]);
+
         $this->getView();
 
         // === REQUIRED DATA ===
@@ -138,7 +154,7 @@ class PostController extends BaseController
      */
     public function actionAdd()
     {
-        $this->is_auth = true; //isset($_SESSION['user']);
+        $this->is_auth = true; // isset($_SESSION['auth']);
         // TODO Delete after authorization is implemented
         $user_name = 'Igor';
         $user_id = 1;

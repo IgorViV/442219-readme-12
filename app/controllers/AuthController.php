@@ -86,4 +86,14 @@ class AuthController extends BaseController
 
         $this->getView();
     }
+
+    public function actionLogout()
+    {
+        $_SESSION = [];
+
+        if (!isset($_SESSION['auth'])) {
+            header("Location: /");
+            exit();
+        }
+    }
 }
