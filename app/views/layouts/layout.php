@@ -34,7 +34,7 @@
                 micro blogging
             </p>
         </div>
-        <!-- Форму поиска можно -->
+        <!-- Форма поиска -->
         <!-- $is_search = false; удалена на странице регистрации -->
         <?php if ($is_search): ?>
         <form class="header__search-form form" action="#" method="get">
@@ -58,17 +58,17 @@
                 <?php if ($is_auth): ?>
                 <ul class="header__my-nav">
                     <li class="header__my-page header__my-page--popular">
-                        <a class="header__page-link header__page-link--active" title="Популярный контент">
+                        <a class="header__page-link <?= (isset($uri_page) && ($uri_page === 'post')) ? 'header__page-link--active' : ''; ?>" href="/post" title="Популярный контент">
                             <span class="visually-hidden">Популярный контент</span>
                         </a>
                     </li>
                     <li class="header__my-page header__my-page--feed">
-                        <a class="header__page-link" href="feed.html" title="Моя лента">
+                        <a class="header__page-link <?= (isset($uri_page) && ($uri_page === 'user')) ? 'header__page-link--active' : ''; ?>" href="/user" title="Моя лента">
                             <span class="visually-hidden">Моя лента</span>
                         </a>
                     </li>
                     <li class="header__my-page header__my-page--messages">
-                        <a class="header__page-link" href="messages.html" title="Личные сообщения">
+                        <a class="header__page-link <?= (isset($uri_page) && ($uri_page === 'message')) ? 'header__page-link--active' : ''; ?>" href="/messages" title="Личные сообщения">
                             <span class="visually-hidden">Личные сообщения</span>
                         </a>
                     </li>
@@ -109,7 +109,7 @@
                                         </a>
                                     </li>
                                     <li class="header__profile-nav-item">
-                                        <a class="header__profile-nav-link" href="#">
+                                        <a class="header__profile-nav-link" href="/auth/logout">
                                             <span class="header__profile-nav-text">
                                                 Выход
                                             </span>
