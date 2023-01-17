@@ -33,7 +33,6 @@ class PostController extends BaseController
         // =================
 
         $this->uri_page = 'post';
-//        debug($this->uri_page);
 
         $popular_posts = '';
         $type = new Type();
@@ -154,7 +153,13 @@ class PostController extends BaseController
      */
     public function actionAdd()
     {
-        $this->is_auth = true; // isset($_SESSION['auth']);
+        if (!isset($_SESSION['auth'])) {
+            header("Location: /");
+
+            exit;
+        }
+
+        $this->is_auth = isset($_SESSION['auth']);
         // TODO Delete after authorization is implemented
         $user_name = 'Igor';
         $user_id = 1;
@@ -253,6 +258,29 @@ class PostController extends BaseController
             'title_page' => 'Readme: публикация поста', //$this->title_page, // Readme: публикация поста
             'filter_content' => $filter_content,
             'tabs_content' => $tabs_content,
+            'is_search' => $this->is_search,
+            'is_reg' => $this->is_reg,
+        ]);
+
+        $this->getView();
+    }
+
+    public function actionSearch()
+    {
+        if (!isset($_SESSION['auth'])) {
+            header("Location: /");
+
+            exit;
+        }
+
+        $this->is_auth = isset($_SESSION['auth']);
+
+        $this->setData([
+            'is_auth' => $this->is_auth,
+//            'user_name' => $user_name,
+            'title_page' => 'Readme: результаты поиска', //$this->title_page, // Readme: публикация поста
+//            'filter_content' => $filter_content,
+//            'tabs_content' => $tabs_content,
             'is_search' => $this->is_search,
             'is_reg' => $this->is_reg,
         ]);

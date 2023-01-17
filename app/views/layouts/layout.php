@@ -37,7 +37,7 @@
         <!-- Форма поиска -->
         <!-- $is_search = false; удалена на странице регистрации -->
         <?php if ($is_search): ?>
-        <form class="header__search-form form" action="#" method="get">
+        <form class="header__search-form form" action="/post/search" method="get">
             <div class="header__search">
                 <label class="visually-hidden">Поиск</label>
                 <input class="header__search-input form__input" type="search">
@@ -83,7 +83,7 @@
                             </div>
                             <div class="header__profile-name">
                                 <span>
-                                    <?=$user_name;?>
+                                    <?=$user_name ?? '';?>
                                 </span>
                                 <svg class="header__link-arrow" width="10" height="6">
                                     <use xlink:href="#icon-arrow-right-ad"></use>
