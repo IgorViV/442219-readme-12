@@ -8,6 +8,7 @@
  * @var bool $is_reg The registration button is set
  * @var bool $is_search The search panel is set
  * @var string $user_name Name of the authorized auth
+ * @var string $search Value search input
  */
 ?>
 <!DOCTYPE html>
@@ -40,7 +41,7 @@
         <form class="header__search-form form" action="/post/search" method="get">
             <div class="header__search">
                 <label class="visually-hidden">Поиск</label>
-                <input class="header__search-input form__input" type="search">
+                <input class="header__search-input form__input" type="search" name="search" value="<?= $search ?? ''; ?>">
                 <button class="header__search-button button" type="submit">
                     <svg class="header__search-icon" width="18" height="18">
                         <use xlink:href="#icon-search"></use>

@@ -10,11 +10,12 @@ VALUES
 -- adding users
 INSERT INTO users (email, user_name, user_password, avatar_url)
 VALUES
-  ('larisa@mail.ru', 'Лариса', 'larisapassword', 'userpic-larisa-small.jpg'),
-  ('vlad99@mail.ru', 'Владик', 'vlad99password', 'userpic.jpg'),
-  ('victory@mail.ru', 'Виктор', 'victorypassword', 'userpic-mark.jpg'),
-  ('mark@mail.ru', 'Максим', 'maksimpassword', 'userpic.jpg'),
-  ('anna@mail.ru', 'Анна', 'annapassword', 'userpic-larisa-small.jpg');
+  ('larisa@mail.ru', 'Лариса', '$2y$10$HWMYYuWwBeM5gNDZa0SUD.gNU1ncQ3nl6EdgKx2bX13G04ilVq1yq', 'userpic-larisa-small.jpg'),
+  ('vlad99@mail.ru', 'Владик', '$2y$10$HWMYYuWwBeM5gNDZa0SUD.gNU1ncQ3nl6EdgKx2bX13G04ilVq1yq', 'userpic.jpg'),
+  ('victory@mail.ru', 'Виктор', '$2y$10$HWMYYuWwBeM5gNDZa0SUD.gNU1ncQ3nl6EdgKx2bX13G04ilVq1yq', 'userpic-mark.jpg'),
+  ('mark@mail.ru', 'Максим', '$2y$10$HWMYYuWwBeM5gNDZa0SUD.gNU1ncQ3nl6EdgKx2bX13G04ilVq1yq', 'userpic.jpg'),
+  ('igor@mail.ru', 'Игорь', '$2y$10$HWMYYuWwBeM5gNDZa0SUD.gNU1ncQ3nl6EdgKx2bX13G04ilVq1yq', 'userpic.jpg'),
+  ('anna@mail.ru', 'Анна', '$2y$10$HWMYYuWwBeM5gNDZa0SUD.gNU1ncQ3nl6EdgKx2bX13G04ilVq1yq', 'userpic-larisa-small.jpg');
 
 -- adding posts;
 INSERT INTO posts (title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)

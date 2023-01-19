@@ -23,7 +23,6 @@ class PostController extends BaseController
     {
         if (!isset($_SESSION['auth'])) {
             header("Location: /");
-
             exit;
         }
 
@@ -92,7 +91,6 @@ class PostController extends BaseController
     {
         if (!isset($_SESSION['auth'])) {
             header("Location: /");
-
             exit;
         }
 
@@ -155,7 +153,6 @@ class PostController extends BaseController
     {
         if (!isset($_SESSION['auth'])) {
             header("Location: /");
-
             exit;
         }
 
@@ -269,20 +266,50 @@ class PostController extends BaseController
     {
         if (!isset($_SESSION['auth'])) {
             header("Location: /");
-
             exit;
         }
 
         $this->is_auth = isset($_SESSION['auth']);
+        // TODO Delete after authorization is implemented
+        $user_name = 'Igor';
+//        $user_id = 1;
+        // =================
+
+        $search = filter_input(INPUT_GET, 'search');
+        $search = ($search !== '') ? $search : null;
+        $posts = [];
+        $found_posts = '';
+
+        if ($search) {
+            $posts = (new Post())->findPostsFromSearch($search);
+
+            foreach($posts as $post) {
+                $post['diff_time'] = get_diff_time_public_post($post['created_at']);
+                $post_content = $this->getTemplate("blocks-popular/block-{$post['type_alias']}.php", [
+                    'post' => $post,
+                ]);
+
+                $count_comments = count((new Comment())->findAllByPost($post['posts_id']));
+
+                $found_posts .= $this->getTemplate('blocks-popular/post-popular.php', [
+                    'post' => $post,
+                    'post_content' => $post_content,
+                    'count_comments' => $count_comments,
+                ]);
+            }
+        }
 
         $this->setData([
             'is_auth' => $this->is_auth,
-//            'user_name' => $user_name,
+            'user_name' => $user_name,
             'title_page' => 'Readme: результаты поиска', //$this->title_page, // Readme: публикация поста
 //            'filter_content' => $filter_content,
 //            'tabs_content' => $tabs_content,
             'is_search' => $this->is_search,
             'is_reg' => $this->is_reg,
+            'search' => $search,
+            'posts' => $posts,
+            'found_posts' => $found_posts,
         ]);
 
         $this->getView();
