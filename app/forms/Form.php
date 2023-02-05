@@ -156,6 +156,27 @@ abstract class Form
         // - Привязка тегов к публикации
         // Информацию из поля «Теги» надо разделить на отдельные теги-слова.
         // Эти теги сохраняются в отдельной таблице и ссылаются на запись из таблицы постов
+        // /(^#[a-zа-яё0-9]{1,30})/i регулярное выражение ?
+        // (#(?<tag>[A-Za-zА-Яа-я]{1,19})\s*)+
+
+        if (!empty(filter_input(INPUT_POST, $field_name))) {
+            $tags = explode(' ', filter_input(INPUT_POST, $field_name));
+
+            foreach ($tags as $tag) {
+                if (substr($tag, 0) !== '#') {
+                    $this->errors[$field_name][] = 'Хэштег должен начинаться символом #'; // ?
+                }
+                // TODO implement on regexp
+            }
+
+//            if (false) {
+//                $this->errors[$field_name][] = 'Теги нужно разделять пробелом';
+//            }
+
+            if (count($this->errors[$field_name])) {
+                return false;
+            }
+        }
 
         return true;
     }
@@ -215,7 +236,7 @@ abstract class Form
     }
 
     /**
-     * Get all fields_db form
+     * Get all fields for db
      *
      * @return array
      */
@@ -333,7 +354,7 @@ abstract class Form
             if ($field === $this->file_field) {
                 $this->form_data[$field] = $this->file_url;
             } else {
-                $this->form_data[$field] = filter_input(INPUT_POST, $field, FILTER_SANITIZE_SPECIAL_CHARS);
+                $this->form_data[$field] = filter_input(INPUT_POST, $field, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             }
         }
 
@@ -380,20 +401,35 @@ abstract class Form
     /**
      * Prepares data for writing to the database
      *
-     * @param int $user_id
-     * @param int $type_id
      */
-    protected function prepareDataDb(int $user_id, int $type_id): void
+    protected function prepareDataDb(): void
     {
         foreach($this->fields_db as $field_db => $field_form) {
             foreach($this->form_data as $field => $value) {
-                if ($field_form === $field) {
+                if (($field_form === $field) && ($field !== 'password')) {
                     $this->data_db[$field_db] = $value;
+                }
+                if (($field_form === $field) && ($field === 'password')) {
+                    $this->data_db[$field_db] = password_hash($value, PASSWORD_DEFAULT);
                 }
             }
         }
-        $this->data_db['user_id'] = $user_id;
-        $this->data_db['type_id'] = $type_id;
+//        $this->data_db['user_id'] = $user_id;
+//        $this->data_db['type_id'] = $type_id;
+    }
+
+    /**
+     * Set additional data for DB
+     *
+     * @param string $name_field
+     * @param mixed $value_field
+     * @return void
+     */
+    public function setDataDb(string $name_field, mixed $value_field): void
+    {
+        if(!empty($name_field)) {
+            $this->data_db[$name_field] = $value_field;
+        }
     }
 
     /**
@@ -401,9 +437,9 @@ abstract class Form
      *
      * @param object $model Object of the model class
      */
-    public function writeDb(object $model, $user_id, $type_id): int
+    public function writeDb(object $model): int
     {
-        $this->prepareDataDb($user_id, $type_id);
+        $this->prepareDataDb();
 
         if(count($this->data_db)){
             $model->add(array_keys($this->data_db), array_values($this->data_db));

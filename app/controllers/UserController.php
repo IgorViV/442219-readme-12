@@ -20,12 +20,11 @@ class UserController extends BaseController
             exit;
         }
 
-        $this->uri_page = 'user';
+        $this->uri_page = 'user'; // TODO ?
 
         $this->is_auth = $_SESSION['auth'];
-        $user_id = filter_input(INPUT_GET, 'id');
-        $user_name = (new User())->findFieldsOne(['user_name'], $user_id)['user_name'];
-
+//        $user_name = (new User())->findFieldsOne(['user_name'], $_SESSION['user_id'])['user_name'];
+        $user_name = $_SESSION['user_name'];
         $this->setData([
 //            'popular_posts' => $popular_posts,
 //            'types' => $types,

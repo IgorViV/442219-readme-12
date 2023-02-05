@@ -33,9 +33,12 @@ class MainController extends BaseController
             if (empty($form_errors)) {
                 $_SESSION = [];
                 $_SESSION['auth'] = true;
-                $user_id = (new User())->findUserEmail($form_data['email'])['id'];
-                $_SESSION['user_id'] = $user_id;
-                header("Location: /user/index?id=$user_id");
+//                $user_id = (new User())->findUserEmail($form_data['email'])['id'];
+                $user = (new User())->findUserEmail($form_data['email'], '*');
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_name'] = $user['user_name'];
+
+                header("Location: /user/index?id={$user['id']}");
                 exit;
             }
         }

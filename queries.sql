@@ -28,6 +28,25 @@ VALUES
   ('Лучший подкаст', NULL, NULL, NULL, 'https://www.youtube.com/watch?v=NuOTVGT6gVk&list=PLMBnwIwFEFHcwuevhsNXkFTcadeX5R1Go', NULL, 8, 4, 2),
   ('Доклад интрига', NULL, NULL, NULL, 'https://www.youtube.com/watch?v=nIFClfBXuIQ&list=RDCMUCTUyoZMfksbNIHfWJjwr5aQ&index=2', NULL, 12, 5, 2);
 
+-- adding hashtags
+INSERT INTO hashtags (title)
+VALUES
+	('#video'),
+    ('#super'),
+    ('#fine'),
+    ('#good'),
+    ('#photo');
+    
+INSERT INTO posts_hashtags (post_id, hashtag_id)
+VALUES
+	(5, 1),
+    (6, 1),
+    (7, 1),
+    (1, 2),
+    (2, 3),
+    (3, 4),
+    (4, 5);
+
 -- adding comments;
 INSERT INTO comments (content, author_id, post_id)
 VALUES

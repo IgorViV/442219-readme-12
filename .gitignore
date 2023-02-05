@@ -6,7 +6,7 @@
 *.psd
 *.sublime*
 .vscode
-tasks.txt
+*.txt
 Thumbs.db
 vendor
 web/uploads/*

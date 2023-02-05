@@ -8,7 +8,7 @@ use Readme\app\exceptions\ExceptionDbConnect;
  */
 class User extends Model
 {
-    protected $table = 'users';
+    protected string $table = 'users';
 
     /**
      * Gets an entry by id only specified fields

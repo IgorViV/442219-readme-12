@@ -11,8 +11,8 @@ use Readme\app\exceptions\ExceptionPrepareData;
  */
 abstract class Model
 {
-    protected $db_connect;
-    protected $table;
+    protected object $db_connect;
+    protected string $table;
 
     public function __construct()
     {
@@ -24,14 +24,16 @@ abstract class Model
      *
      * @param array $fields Name of fields database table
      * @param array $values Field values
+     * @throws ExceptionDbConnect
+     * @throws ExceptionPrepareData
      */
-    public function add(array $fields, array $values)
+    public function add(array $fields, array $values, string $name_table = ''): void
     {
         if (count($fields) !== count($values)) {
             throw new ExceptionPrepareData('Ошибка входных данных: ');
         }
 
-        $current_table = $this->table;
+        $current_table = empty($name_table) ? $this->table : $name_table;
 
         $prepare_data = $this->getPrepareData($values);
 

@@ -27,9 +27,7 @@ class PostController extends BaseController
         }
 
         $this->is_auth = isset($_SESSION['auth']);
-        // TODO Delete after authorization is implemented
-        $user_name = 'Igor';
-        // =================
+        $user_name = $_SESSION['user_name'];
 
         $this->uri_page = 'post';
 
@@ -49,7 +47,7 @@ class PostController extends BaseController
             $posts = $post->findPopularPosts();
         }
 
-        if ($posts_sort) {
+        if ($posts_sort !== CURRENT_SORT) {
             // TODO Implement sorting
         }
 
@@ -95,9 +93,7 @@ class PostController extends BaseController
         }
 
         $this->is_auth = isset($_SESSION['auth']);
-        // TODO Delete after authorization is implemented
-        $user_name = 'Igor';
-        // =================
+        $user_name = $_SESSION['user_name'];
 
         $post_id = filter_input(INPUT_GET, 'id');
         $post = new Post();
@@ -157,10 +153,8 @@ class PostController extends BaseController
         }
 
         $this->is_auth = isset($_SESSION['auth']);
-        // TODO Delete after authorization is implemented
-        $user_name = 'Igor';
-        $user_id = 1;
-        // =================
+        $user_name = $_SESSION['user_name'];
+        $user_id = $_SESSION['user_id'];
 
         $filter_content = '';
         $tabs_content = '';
@@ -202,7 +196,10 @@ class PostController extends BaseController
                 $new_post = new Post();
 
                 try {
-                    $new_post_id = $post_form->writeDb($new_post, $user_id, $type_id);
+                    $post_form->setDataDb('user_id', $user_id);
+                    $post_form->setDataDb('type_id', $type_id);
+
+                    $new_post_id = $post_form->writeDb($new_post);
                     header("Location: /post/view?id=" . $new_post_id);
                 } catch(ExceptionDbWrite $e) {
                     echo 'Ошибка записи в БД: ' . $e->getMessage();
@@ -271,16 +268,16 @@ class PostController extends BaseController
 
         $this->is_auth = isset($_SESSION['auth']);
         // TODO Delete after authorization is implemented
-        $user_name = 'Igor';
+        $user_name = $_SESSION['user_name'];
 //        $user_id = 1;
         // =================
-
-        $search = filter_input(INPUT_GET, 'search');
-        $search = ($search !== '') ? $search : null;
         $posts = [];
         $found_posts = '';
+        $search = '';
 
-        if ($search) {
+        $search = filter_input(INPUT_GET, 'search', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        if (!empty($search)) {
             $posts = (new Post())->findPostsFromSearch($search);
 
             foreach($posts as $post) {
@@ -303,8 +300,6 @@ class PostController extends BaseController
             'is_auth' => $this->is_auth,
             'user_name' => $user_name,
             'title_page' => 'Readme: результаты поиска', //$this->title_page, // Readme: публикация поста
-//            'filter_content' => $filter_content,
-//            'tabs_content' => $tabs_content,
             'is_search' => $this->is_search,
             'is_reg' => $this->is_reg,
             'search' => $search,

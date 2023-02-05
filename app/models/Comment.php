@@ -8,7 +8,7 @@ use Readme\app\models\Model;
  */
 class Comment extends Model
 {
-    protected $table = 'comments';
+    protected string $table = 'comments';
 
     /**
      *

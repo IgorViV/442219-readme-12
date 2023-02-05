@@ -9,7 +9,7 @@ use Readme\app\exceptions\ExceptionPrepareData;
  */
 class Db
 {
-    protected $connect;
+    protected \mysqli $connect;
     protected static $instance;
 
     protected function __construct()

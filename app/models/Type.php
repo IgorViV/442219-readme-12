@@ -7,6 +7,6 @@ use Readme\app\models\Model;
  */
 class Type extends Model
 {
-    protected $table = 'types';
+    protected string $table = 'types';
 
 }
