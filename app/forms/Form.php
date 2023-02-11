@@ -449,40 +449,6 @@ abstract class Form
     }
 
     /**
-     * TEST Writing to the database
-     *
-     * @param object $model Object of the model class
-     */
-    public function writeDbTest(object $model): int
-    {
-        $this->prepareDataDbTest();
-
-        if(count($this->data_db)){
-            $model->add(array_keys($this->data_db), array_values($this->data_db));
-        }
-
-        return $model->getLastId();
-    }
-
-    /**
-     * TEST Prepares data for writing to the database
-     *
-     */
-    protected function prepareDataDbTest(): void
-    {
-        foreach($this->fields_db as $field_db => $field_form) {
-            foreach($this->form_data as $field => $value) {
-                if (($field_form === $field) && ($field !== 'password')) {
-                    $this->data_db[$field_db] = $value;
-                }
-                if (($field_form === $field) && ($field === 'password')) {
-                    $this->data_db[$field_db] = password_hash($value, PASSWORD_DEFAULT);
-                }
-            }
-        }
-    }
-
-    /**
      * Add new data in form data for write database
      *
      * @param array $names_keys
@@ -495,5 +461,13 @@ abstract class Form
         foreach ($comb_array as $key => $value) {
             $this->form_data[$key] = $value;
         }
+    }
+
+    /**
+     * Transaction
+     */
+    public function addTransaction()
+    {
+        // TODO implement method
     }
 }

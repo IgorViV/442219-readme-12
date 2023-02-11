@@ -34,7 +34,7 @@ class AuthController extends BaseController
                 $form->uploadsFileTest('file');
                 $new_user = new User();
                 try {
-                    $new_user_id = $form->writeDbTest($new_user);
+                    $new_user_id = $form->writeDb($new_user);
                     header("Location: /");
                 } catch(ExceptionDbWrite $e) {
                     echo 'Ошибка записи в БД: ' . $e->getMessage();
