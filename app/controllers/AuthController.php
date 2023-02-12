@@ -31,7 +31,7 @@ class AuthController extends BaseController
             $form_data = $form->getData();
 
             if (empty($form_errors)) {
-                $form->uploadsFileTest('file');
+                $form->uploadsFile();
                 $new_user = new User();
                 try {
                     $new_user_id = $form->writeDb($new_user);

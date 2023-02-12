@@ -371,29 +371,12 @@ abstract class Form
      */
     public function uploadsFile(): void
     {
-        if (isset($_FILES['file-photo']['name'])) {
-            $file_name = $_FILES['file-photo']['name'];
+        if (isset($_FILES[$this->file_field]['name'])) {
+            $file_name = $_FILES[$this->file_field]['name'];
             $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
             $file_name = uniqid() . '.' . $file_ext;
             $this->file_url = $this->file_path . $file_name;
-            move_uploaded_file($_FILES['file-photo']['tmp_name'], $this->file_url);
-            $this->fillFormData();
-        }
-    }
-
-    /**
-     * Uploads file
-     *
-     * @param string $file_field Name input file field in form
-     */
-    public function uploadsFileTest(string $file_field): void
-    {
-        if (isset($_FILES[$file_field]['name'])) {
-            $file_name = $_FILES[$file_field]['name'];
-            $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
-            $file_name = uniqid() . '.' . $file_ext;
-            $this->file_url = $this->file_path . $file_name;
-            move_uploaded_file($_FILES[$file_field]['tmp_name'], $this->file_url);
+            move_uploaded_file($_FILES[$this->file_field]['tmp_name'], $this->file_url);
             $this->fillFormData();
         }
     }
@@ -414,8 +397,6 @@ abstract class Form
                 }
             }
         }
-//        $this->data_db['user_id'] = $user_id;
-//        $this->data_db['type_id'] = $type_id;
     }
 
     /**
